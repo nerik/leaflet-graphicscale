@@ -4,7 +4,12 @@
   "description": "A graphic scale for Leaflet.js that looks sharp",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "uglifyjs src/Leaflet.GraphicScale.js > dist/Leaflet.GraphicScale.js && cp src/Leaflet.GraphicScale.css dist/Leaflet.GraphicScale.css",
+    "dev:livereload": "live-reload --port 9991 ./demo ./src",
+    "dev:watch": "onchange 'src/**/*.*' -- npm run build",
+    "dev:serve": "http-server -p 9990 .",
+    "dev": "npm run build && parallelshell 'npm run dev:livereload -s' 'npm run dev:serve -s' 'npm run dev:watch -s'"
   },
   "repository": {
     "type": "git",
@@ -22,5 +27,13 @@
   "bugs": {
     "url": "https://github.com/nerik/leaflet-graphicscale/issues"
   },
-  "homepage": "https://github.com/nerik/leaflet-graphicscale"
+  "homepage": "https://github.com/nerik/leaflet-graphicscale",
+  "devDependencies": {
+    "http-server": "^0.8.0",
+    "leaflet": "^0.7.3",
+    "live-reload": "^1.1.0",
+    "onchange": "^1.1.0",
+    "parallelshell": "^1.1.1",
+    "uglify-js": "^2.4.20"
+  }
 }
