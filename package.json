@@ -1,0 +1,26 @@
+{
+  "name": "leaflet-graphicscale",
+  "version": "1.0.0",
+  "description": "A graphic scale for Leaflet.js that looks sharp",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nerik/leaflet-graphicscale.git"
+  },
+  "keywords": [
+    "graphicscale",
+    "leaflet",
+    "scale",
+    "kilometers",
+    "km"
+  ],
+  "author": "Erik Escoffier <erik.escoffier@gmail.com> (https://github.com/nerik/)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nerik/leaflet-graphicscale/issues"
+  },
+  "homepage": "https://github.com/nerik/leaflet-graphicscale"
+}
