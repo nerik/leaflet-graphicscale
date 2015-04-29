@@ -7,8 +7,10 @@ L.Control.GraphicScale = L.Control.extend({
         position: 'bottomleft',
         maxWidth: 100,
         metric: true,
-        imperial: true,
-        updateWhenIdle: false
+        imperial: false,
+        updateWhenIdle: false,
+        minUnitWidth: 30,
+        maxUnitsWidth: 250
     },
 
     onAdd: function (map) {
@@ -31,6 +33,7 @@ L.Control.GraphicScale = L.Control.extend({
     },
 
     _addScales: function (options, className, container) {
+        this._scale = L.DomUtil.create('div', className + '-line', container);
         if (options.metric) {
             this._mScale = L.DomUtil.create('div', className + '-line', container);
         }
@@ -42,18 +45,67 @@ L.Control.GraphicScale = L.Control.extend({
     _update: function () {
         var bounds = this._map.getBounds(),
             centerLat = bounds.getCenter().lat,
+            //length of an half world arc at current lat
             halfWorldMeters = 6378137 * Math.PI * Math.cos(centerLat * Math.PI / 180),
+            //length of this arc from map left to map right
             dist = halfWorldMeters * (bounds.getNorthEast().lng - bounds.getSouthWest().lng) / 180,
 
             size = this._map.getSize(),
             options = this.options,
             maxMeters = 0;
 
+
         if (size.x > 0) {
-            maxMeters = dist * (options.maxWidth / size.x);
+            var scaleWidthRatio = options.maxWidth / size.x;
+            maxMeters = dist * scaleWidthRatio;
         }
 
         this._updateScales(options, maxMeters);
+        this._updateScale(dist, options);
+    },
+
+    _updateScale: function(dist, options) {
+        var maxMeters = dist;
+        var exp = (Math.floor(maxMeters) + '').length + 1;
+        // var pow10 = Math.pow(10, (Math.floor(maxMeters) + '').length - 1);
+
+        var unitWidthPx, unitMeters;
+        for (var i = exp; i > 0; i--) {
+            var meters = Math.pow(10, i);
+            var r = meters/maxMeters;
+            var widthPx = this._map.getSize().x * r;
+            if (widthPx<options.minUnitWidth) {
+                // console.log( Math.pow(10, i-1));
+                break;
+            }
+            unitMeters = meters;
+            unitWidthPx = widthPx;
+        }
+
+        var multiples = [5, 3, 2, 1];
+        var unitsMultiple;
+        for (var j = 0; j < multiples.length; j++) {
+            var multiple = multiples[j];
+            console.log(multiple)
+            console.log(multiple * unitWidthPx)
+            if ( (multiple * unitWidthPx) < options.maxUnitsWidth) {
+                unitsMultiple = multiple;
+                break;
+            }
+        }
+
+        console.log('-----');
+        console.log(unitsMultiple);
+        console.log(unitMeters*unitsMultiple);
+        console.log('-----');
+
+        // var meters = pow10;
+
+        // var r = meters/maxMeters;
+        // var widthPx = this._map.getSize().x * r;
+        this._scale.style.background = 'blue';
+        this._scale.style.width = unitWidthPx*unitsMultiple + 'px';
+
     },
 
     _updateScales: function (options, maxMeters) {
@@ -69,6 +121,8 @@ L.Control.GraphicScale = L.Control.extend({
     _updateMetric: function (maxMeters) {
         var meters = this._getRoundNum(maxMeters);
 
+        var r = meters / maxMeters;
+        // console.log(meters);
         this._mScale.style.width = this._getScaleWidth(meters / maxMeters) + 'px';
         this._mScale.innerHTML = meters < 1000 ? meters + ' m' : (meters / 1000) + ' KM';
     },
@@ -98,10 +152,17 @@ L.Control.GraphicScale = L.Control.extend({
     },
 
     _getRoundNum: function (num) {
+        // console.log('----')
+        // console.log(num)
         var pow10 = Math.pow(10, (Math.floor(num) + '').length - 1),
             d = num / pow10;
+        // console.log(pow10)
+        // console.log(d)
 
         d = d >= 10 ? 10 : d >= 5 ? 5 : d >= 3 ? 3 : d >= 2 ? 2 : 1;
+        // d = d >= 10 ? 10 : 1;
+
+
 
         return pow10 * d;
     }
