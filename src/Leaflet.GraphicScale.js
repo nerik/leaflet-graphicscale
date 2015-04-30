@@ -20,10 +20,13 @@ L.Control.GraphicScale = L.Control.extend({
             container = L.DomUtil.create('div', className),
             options = this.options;
 
+        this._tpl = L.DomUtil.get('scaleTpl').innerHTML;
+
         this._addScales(options, className, container);
 
         map.on(options.updateWhenIdle ? 'moveend' : 'move', this._update, this);
         map.whenReady(this._update, this);
+
 
         return container;
     },
@@ -106,6 +109,14 @@ L.Control.GraphicScale = L.Control.extend({
         this._scale.style.background = 'blue';
         this._scale.style.width = unitWidthPx*unitsMultiple + 'px';
 
+        this._render();
+
+    },
+
+    _render: function() {
+
+        
+        this._scale.innerHTML = this._tpl;
     },
 
     _updateScales: function (options, maxMeters) {
@@ -119,6 +130,7 @@ L.Control.GraphicScale = L.Control.extend({
     },
 
     _updateMetric: function (maxMeters) {
+        //maxMeters : how many meters can we fit in options.maxWidth
         var meters = this._getRoundNum(maxMeters);
 
         var r = meters / maxMeters;
@@ -159,10 +171,11 @@ L.Control.GraphicScale = L.Control.extend({
         // console.log(pow10)
         // console.log(d)
 
+        console.log('----')
+        console.log(num)
+        console.log(pow10)
+
         d = d >= 10 ? 10 : d >= 5 ? 5 : d >= 3 ? 3 : d >= 2 ? 2 : 1;
-        // d = d >= 10 ? 10 : 1;
-
-
 
         return pow10 * d;
     }
