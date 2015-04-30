@@ -10,12 +10,14 @@ $fillHollowPadding: 1px;
 
 .leaflet-control-graphicscale {
 	
-	.hidden {
-		width: 0;
-		height: 0;
-		border-width: 0;
+	.lbl {
+		position: relative;
+	  	left: 100%;
+	  	width: 20px;
+	  	text-align: center;
+	  	margin-left: -10px;
 	}
-
+	
 	.unit {
 		display: inline-block;
 		width: 40px;
@@ -36,9 +38,19 @@ $fillHollowPadding: 1px;
 			border-width: $borderWidth 0 $borderWidth $borderWidth;
 		}
 
-		&:last-child .l1 {
+		&:not(.hidden):last-child .l1 {
 			border-right-width: $borderWidth;
 		} 
+
+		&.hidden {
+			width: 0;
+			height: 0;
+			border-width: 0;
+
+			.lbl {
+				opacity: 0;
+			}
+		}
 
 	}
 
