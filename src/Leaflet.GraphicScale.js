@@ -10,7 +10,7 @@ L.Control.GraphicScale = L.Control.extend({
         imperial: false,
         updateWhenIdle: false,
         minUnitWidth: 30,
-        maxUnitsWidth: 250
+        maxUnitsWidth: 200
     },
 
     onAdd: function (map) {
@@ -20,9 +20,13 @@ L.Control.GraphicScale = L.Control.extend({
             container = L.DomUtil.create('div', className),
             options = this.options;
 
-        this._tpl = L.DomUtil.get('scaleTpl').innerHTML;
-
         this._addScales(options, className, container);
+
+        this._tpl = L.DomUtil.get('scaleTpl').innerHTML;
+        this._scale.innerHTML = this._tpl ;
+
+
+
 
         map.on(options.updateWhenIdle ? 'moveend' : 'move', this._update, this);
         map.whenReady(this._update, this);
@@ -99,24 +103,42 @@ L.Control.GraphicScale = L.Control.extend({
 
         console.log('-----');
         console.log(unitsMultiple);
-        console.log(unitMeters*unitsMultiple);
+        console.log(unitMeters);
         console.log('-----');
 
         // var meters = pow10;
 
         // var r = meters/maxMeters;
         // var widthPx = this._map.getSize().x * r;
-        this._scale.style.background = 'blue';
-        this._scale.style.width = unitWidthPx*unitsMultiple + 'px';
+        // this._scale.style.width = unitWidthPx*unitsMultiple + 'px';
 
-        this._render();
+        this._render(unitWidthPx, unitsMultiple, unitMeters);
 
     },
 
-    _render: function() {
+    _render: function(unitWidthPx, unitsMultiple, unitMeters) {
 
-        
-        this._scale.innerHTML = this._tpl;
+        this._units = document.querySelectorAll('.leaflet-control-graphicscale .unit');
+        this._unitsLbls = document.querySelectorAll('.leaflet-control-graphicscale .unit .lbl');
+
+        var displayUnit = (unitMeters<1000) ? 'm' : 'km';
+        var unitLength = unitMeters;
+        if (displayUnit === 'km') unitLength /= 1000;
+
+
+        for (var i = 0; i < this._units.length; i++) {
+            var u = this._units[i];
+
+            if (i <= unitsMultiple) {
+                u.style.width = unitWidthPx + 'px';
+                u.className = 'unit';
+                var lbl = this._unitsLbls[i];
+                lbl.innerHTML = ( (i+1)*unitLength );
+            } else {
+                u.style.width = 0;
+                u.className = 'unit hidden';
+            }
+        }
     },
 
     _updateScales: function (options, maxMeters) {

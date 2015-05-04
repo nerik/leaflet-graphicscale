@@ -12,13 +12,13 @@
   width: 40px; }
   .leaflet-control-graphicscale .unit .l1, .leaflet-control-graphicscale .unit .l2 {
     width: 100%;
-    border-color: black;
+    border-color: #000;
     border-style: solid; }
   .leaflet-control-graphicscale .unit .l2 {
     height: 0;
     border-width: 0; }
   .leaflet-control-graphicscale .unit .l1 {
-    height: 20px;
+    height: 6px;
     border-width: 1px 0 1px 1px; }
   .leaflet-control-graphicscale .unit:not(.hidden):last-child .l1 {
     border-right-width: 1px; }
@@ -33,7 +33,7 @@
   height: 100%;
   position: relative; }
 .leaflet-control-graphicscale.double .unit .l2 {
-  height: 20px;
+  height: 6px;
   border-width: 0 0 1px 1px; }
 .leaflet-control-graphicscale.double .unit:last-child .l2 {
   border-right-width: 1px; }
@@ -43,12 +43,12 @@
   background-color: #000; }
 .leaflet-control-graphicscale.fill-line .l1inner {
   height: 2px;
-  top: 9px; }
+  top: 2px; }
 .leaflet-control-graphicscale.fill-line.double .l2inner {
   height: 2px;
-  top: 9px; }
+  top: 2px; }
 .leaflet-control-graphicscale.fill-hollow .l1inner, .leaflet-control-graphicscale.fill-hollow .l2inner {
   top: 1px;
   left: 1px;
-  height: calc(100% - 2px );
+  height: calc(100% - 2px);
   width: calc(100% - 3px); }

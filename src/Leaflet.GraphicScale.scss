@@ -2,14 +2,14 @@
 	color: red;
 }
 
-$lineHeight: 20px;
+$lineHeight: 6px;
 $borderWidth: 1px;
 $color: #000;
 $fillLineHeight: 2px;
 $fillHollowPadding: 1px;
 
 .leaflet-control-graphicscale {
-	
+
 	.lbl {
 		position: relative;
 	  	left: 100%;
@@ -17,7 +17,7 @@ $fillHollowPadding: 1px;
 	  	text-align: center;
 	  	margin-left: -10px;
 	}
-	
+
 	.unit {
 		display: inline-block;
 		width: 40px;
@@ -40,7 +40,7 @@ $fillHollowPadding: 1px;
 
 		&:not(.hidden):last-child .l1 {
 			border-right-width: $borderWidth;
-		} 
+		}
 
 		&.hidden {
 			width: 0;
@@ -69,9 +69,9 @@ $fillHollowPadding: 1px;
 
 			&:last-child .l2 {
 				border-right-width: $borderWidth;
-			} 
+			}
 		}
-		
+
 	}
 
 	&.fill {
@@ -80,12 +80,12 @@ $fillHollowPadding: 1px;
 		}
 		.unit:nth-child(even) .l2 .l2inner {
 			background-color: #000;
-		}	
+		}
 
 	}
 
 	&.fill-line {
-	
+
 		@mixin fill-line {
 			height: 2px;
 			top: $lineHeight/2 - $fillLineHeight/2;
@@ -104,7 +104,7 @@ $fillHollowPadding: 1px;
 		.l1inner, .l2inner {
 			top: $fillHollowPadding;
 			left: $fillHollowPadding;
-			height: calc(100% - 2px );
+			height: calc(100% - 2px);
 			width: calc(100% - 3px);
 		}
 	}
