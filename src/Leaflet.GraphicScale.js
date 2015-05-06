@@ -9,7 +9,7 @@ L.Control.GraphicScale = L.Control.extend({
         metric: true,
         imperial: false,
         updateWhenIdle: false,
-        minUnitWidth: 30,
+        minUnitWidth: 40,
         maxUnitsWidth: 200
     },
 
@@ -24,9 +24,6 @@ L.Control.GraphicScale = L.Control.extend({
 
         this._tpl = L.DomUtil.get('scaleTpl').innerHTML;
         this._scale.innerHTML = this._tpl ;
-
-
-
 
         map.on(options.updateWhenIdle ? 'moveend' : 'move', this._update, this);
         map.whenReady(this._update, this);
@@ -65,52 +62,61 @@ L.Control.GraphicScale = L.Control.extend({
         if (size.x > 0) {
             var scaleWidthRatio = options.maxWidth / size.x;
             maxMeters = dist * scaleWidthRatio;
+            this._updateScales(options, maxMeters);
+            this._updateScale(dist, options);
         }
 
-        this._updateScales(options, maxMeters);
-        this._updateScale(dist, options);
+
     },
 
     _updateScale: function(dist, options) {
         var maxMeters = dist;
         var exp = (Math.floor(maxMeters) + '').length + 1;
-        // var pow10 = Math.pow(10, (Math.floor(maxMeters) + '').length - 1);
 
         var unitWidthPx, unitMeters;
-        for (var i = exp; i > 0; i--) {
-            var meters = Math.pow(10, i);
+        for (var i = exp*2; i > 0; i--) {
+            var meters = Math.pow(10, Math.ceil(i/2) );
+            if (i%2===1) meters /= 2;
+            console.log(meters)
             var r = meters/maxMeters;
             var widthPx = this._map.getSize().x * r;
             if (widthPx<options.minUnitWidth) {
-                // console.log( Math.pow(10, i-1));
                 break;
             }
             unitMeters = meters;
             unitWidthPx = widthPx;
         }
+        console.log('??'+unitMeters)
 
-        var multiples = [5, 3, 2, 1];
+        // console.log(unitWidthPx);
+
+        //multiples (number of units displayed) by order of preference
+        var unitsMultiples = [3, 2, 5, 4];
         var unitsMultiple;
-        for (var j = 0; j < multiples.length; j++) {
-            var multiple = multiples[j];
-            console.log(multiple)
-            console.log(multiple * unitWidthPx)
+        var shortest = Number.POSITIVE_INFINITY;
+        var shortestWithUnit;
+        var totalWidth;
+
+        for (var j = 0; j < unitsMultiples.length; j++) {
+            var multiple = unitsMultiples[j];
+            // console.log(multiple)
+            totalWidth = multiple * unitWidthPx;
+            if (totalWidth<shortest) {
+                shortest = totalWidth;
+                unitsMultiple = multiple;
+            }
             if ( (multiple * unitWidthPx) < options.maxUnitsWidth) {
                 unitsMultiple = multiple;
                 break;
             }
         }
+        console.log('--->' + unitsMultiple)
+        console.log('--->' + unitsMultiple * unitWidthPx)
 
-        console.log('-----');
-        console.log(unitsMultiple);
-        console.log(unitMeters);
-        console.log('-----');
-
-        // var meters = pow10;
-
-        // var r = meters/maxMeters;
-        // var widthPx = this._map.getSize().x * r;
-        // this._scale.style.width = unitWidthPx*unitsMultiple + 'px';
+        // console.log('-----');
+        // console.log(unitsMultiple);
+        // console.log(unitMeters);
+        // console.log('-----');
 
         this._render(unitWidthPx, unitsMultiple, unitMeters);
 
@@ -129,7 +135,7 @@ L.Control.GraphicScale = L.Control.extend({
         for (var i = 0; i < this._units.length; i++) {
             var u = this._units[i];
 
-            if (i <= unitsMultiple) {
+            if (i < unitsMultiple) {
                 u.style.width = unitWidthPx + 'px';
                 u.className = 'unit';
                 var lbl = this._unitsLbls[i];
@@ -193,9 +199,9 @@ L.Control.GraphicScale = L.Control.extend({
         // console.log(pow10)
         // console.log(d)
 
-        console.log('----')
-        console.log(num)
-        console.log(pow10)
+        // console.log('----')
+        // console.log(num)
+        // console.log(pow10)
 
         d = d >= 10 ? 10 : d >= 5 ? 5 : d >= 3 ? 3 : d >= 2 ? 2 : 1;
 
