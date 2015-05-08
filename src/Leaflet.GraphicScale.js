@@ -20,14 +20,33 @@ L.Control.GraphicScale = L.Control.extend({
         this._possibleDivisions = [1, 0.5, 0.25, 0.2];
         this._possibleDivisionsLen = this._possibleDivisions.length;
 
+        this._scale = this._addScale(this.options);
+
         map.on(this.options.updateWhenIdle ? 'moveend' : 'move', this._update, this);
         map.whenReady(this._update, this);
 
-        return this._addScale(this.options);
+        return this._scale;
     },
 
     onRemove: function (map) {
         map.off(this.options.updateWhenIdle ? 'moveend' : 'move', this._update, this);
+    },
+
+    _addScale: function (options) {
+        var classNames = ['leaflet-control-graphicscale'];
+        if (options.fill) {
+            classNames.push('fill');
+            classNames.push('fill-'+options.fill);
+        }
+        if (options.doubleLine) {
+            classNames.push('double');
+        }
+        
+        var scale = L.DomUtil.create('div', classNames.join(' '));
+        scale.appendChild( this._buildScaleDom() );
+        // this._scale.innerHTML = L.DomUtil.get('scaleTpl').innerHTML;
+
+        return scale;
     },
 
     _buildScaleDom: function() {
@@ -46,7 +65,7 @@ L.Control.GraphicScale = L.Control.extend({
 
             var unitLbl = L.DomUtil.create('div', 'lbl');
             unit.appendChild(unitLbl);
-            this._unitsLbls.push(unit);
+            this._unitsLbls.push(unitLbl);
 
             var l1 = L.DomUtil.create('div', 'l1');
             unit.appendChild( l1 );
@@ -62,22 +81,6 @@ L.Control.GraphicScale = L.Control.extend({
         return root;
     },
 
-    _addScale: function (options) {
-        var classNames = ['leaflet-control-graphicscale'];
-        if (options.fill) {
-            classNames.push('fill');
-            classNames.push('fill-'+options.fill);
-        }
-        if (options.doubleLine) {
-            classNames.push('double');
-        }
-        
-        this._scale = L.DomUtil.create('div', classNames.join(' '));
-        this._scale.appendChild( this._buildScaleDom() );
-        // this._scale.innerHTML = L.DomUtil.get('scaleTpl').innerHTML;
-
-        return this._scale;
-    },
 
     _update: function () {
         var bounds = this._map.getBounds(),
@@ -196,9 +199,6 @@ L.Control.GraphicScale = L.Control.extend({
     },
 
     _render: function(unitWidthPx, unitsMultiple, unitMeters) {
-
-        this._units = document.querySelectorAll('.leaflet-control-graphicscale .unit');
-        this._unitsLbls = document.querySelectorAll('.leaflet-control-graphicscale .unit .lbl');
 
         var displayUnit = (unitMeters<1000) ? 'm' : 'km';
         var unitLength = unitMeters;
