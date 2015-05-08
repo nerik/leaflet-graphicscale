@@ -5,9 +5,6 @@
 L.Control.GraphicScale = L.Control.extend({
     options: {
         position: 'bottomleft',
-        maxWidth: 100,
-        metric: true,
-        imperial: false,
         updateWhenIdle: false,
         minUnitWidth: 30,
         maxUnitsWidth: 240,
@@ -23,22 +20,10 @@ L.Control.GraphicScale = L.Control.extend({
         this._possibleDivisions = [1, 0.5, 0.25, 0.2];
         this._possibleDivisionsLen = this._possibleDivisions.length;
 
-
-        var uberContainer = L.DomUtil.create('div','uberContainer');
-
-        var className = 'leaflet-control-scale',
-            containerLegacy = L.DomUtil.create('div', className, uberContainer),
-            options = this.options;
-
-        this._addScales(options, className, containerLegacy);
-
-        this._addScale(uberContainer, options);
-
-        map.on(options.updateWhenIdle ? 'moveend' : 'move', this._update, this);
+        map.on(this.options.updateWhenIdle ? 'moveend' : 'move', this._update, this);
         map.whenReady(this._update, this);
 
-
-        return uberContainer;
+        return this._addScale(this.options);
     },
 
     onRemove: function (map) {
@@ -77,29 +62,21 @@ L.Control.GraphicScale = L.Control.extend({
         return root;
     },
 
-    _addScale: function (container, options) {
+    _addScale: function (options) {
         var classNames = ['leaflet-control-graphicscale'];
         if (options.fill) {
             classNames.push('fill');
             classNames.push('fill-'+options.fill);
         }
         if (options.doubleLine) {
-            classNames.push('double')
+            classNames.push('double');
         }
         
-        this._scale = L.DomUtil.create('div', classNames.join(' '), container);
+        this._scale = L.DomUtil.create('div', classNames.join(' '));
         this._scale.appendChild( this._buildScaleDom() );
         // this._scale.innerHTML = L.DomUtil.get('scaleTpl').innerHTML;
-    },
 
-    _addScales: function (options, className, container) {
-        
-        if (options.metric) {
-            this._mScale = L.DomUtil.create('div', className + '-line', container);
-        }
-        if (options.imperial) {
-            this._iScale = L.DomUtil.create('div', className + '-line', container);
-        }
+        return this._scale;
     },
 
     _update: function () {
@@ -118,7 +95,6 @@ L.Control.GraphicScale = L.Control.extend({
         if (size.x > 0) {
             var scaleWidthRatio = options.maxWidth / size.x;
             maxMeters = dist * scaleWidthRatio;
-            this._updateScales(options, maxMeters);
             this._updateScale(dist, options);
         }
 
@@ -244,66 +220,6 @@ L.Control.GraphicScale = L.Control.extend({
         }
     },
 
-    _updateScales: function (options, maxMeters) {
-        if (options.metric && maxMeters) {
-            this._updateMetric(maxMeters);
-        }
-
-        if (options.imperial && maxMeters) {
-            this._updateImperial(maxMeters);
-        }
-    },
-
-    _updateMetric: function (maxMeters) {
-        //maxMeters : how many meters can we fit in options.maxWidth
-        var meters = this._getRoundNum(maxMeters);
-
-        var r = meters / maxMeters;
-        // console.log(meters);
-        this._mScale.style.width = this._getScaleWidth(meters / maxMeters) + 'px';
-        this._mScale.innerHTML = meters < 1000 ? meters + ' m' : (meters / 1000) + ' KM';
-    },
-
-    _updateImperial: function (maxMeters) {
-        var maxFeet = maxMeters * 3.2808399,
-            scale = this._iScale,
-            maxMiles, miles, feet;
-
-        if (maxFeet > 5280) {
-            maxMiles = maxFeet / 5280;
-            miles = this._getRoundNum(maxMiles);
-
-            scale.style.width = this._getScaleWidth(miles / maxMiles) + 'px';
-            scale.innerHTML = miles + ' mi';
-
-        } else {
-            feet = this._getRoundNum(maxFeet);
-
-            scale.style.width = this._getScaleWidth(feet / maxFeet) + 'px';
-            scale.innerHTML = feet + ' ft';
-        }
-    },
-
-    _getScaleWidth: function (ratio) {
-        return Math.round(this.options.maxWidth * ratio) - 10;
-    },
-
-    _getRoundNum: function (num) {
-        // console.log('----')
-        // console.log(num)
-        var pow10 = Math.pow(10, (Math.floor(num) + '').length - 1),
-            d = num / pow10;
-        // console.log(pow10)
-        // console.log(d)
-
-        // console.log('----')
-        // console.log(num)
-        // console.log(pow10)
-
-        d = d >= 10 ? 10 : d >= 5 ? 5 : d >= 3 ? 3 : d >= 2 ? 2 : 1;
-
-        return pow10 * d;
-    }
 });
 
 L.Map.mergeOptions({
