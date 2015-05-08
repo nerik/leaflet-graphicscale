@@ -1,15 +1,23 @@
-.leaflet-control-scale-line {
-  color: red; }
-
 .leaflet-control-graphicscale .lbl {
   position: relative;
   left: 100%;
   width: 20px;
   text-align: center;
-  margin-left: -10px; }
+  margin-left: -10px;
+  opacity: 1;
+  -webkit-transition: opacity 0.4s linear;
+  -moz-transition: opacity 0.4s linear;
+  -ms-transition: opacity 0.4s linear;
+  -o-transition: opacity 0.4s linear;
+  transition: opacity 0.4s linear; }
 .leaflet-control-graphicscale .unit {
   display: inline-block;
-  width: 40px; }
+  width: 40px;
+  -webkit-transition: width 0.4s ease-in-out;
+  -moz-transition: width 0.4s ease-in-out;
+  -ms-transition: width 0.4s ease-in-out;
+  -o-transition: width 0.4s ease-in-out;
+  transition: width 0.4s ease-in-out; }
   .leaflet-control-graphicscale .unit .l1, .leaflet-control-graphicscale .unit .l2 {
     width: 100%;
     border-color: black;

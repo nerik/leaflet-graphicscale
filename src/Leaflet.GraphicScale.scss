@@ -1,5 +1,9 @@
-.leaflet-control-scale-line {
-	color: red;
+@mixin transition($transition-property, $transition-time, $method) {
+    -webkit-transition: $transition-property $transition-time $method;
+    -moz-transition: $transition-property $transition-time $method;
+    -ms-transition: $transition-property $transition-time $method;
+    -o-transition: $transition-property $transition-time $method;
+    transition: $transition-property $transition-time $method;
 }
 
 $lineHeight: 6px;
@@ -16,11 +20,14 @@ $fillHollowPadding: 1px;
 	  	width: 20px;
 	  	text-align: center;
 	  	margin-left: -10px;
+	  	opacity: 1;
+	  	@include transition(opacity, .4s, linear);
 	}
 
 	.unit {
 		display: inline-block;
 		width: 40px;
+		@include transition(width, 0.4s, ease-in-out);
 
 		.l1, .l2 {
 			width: 100%;

@@ -8,8 +8,8 @@
 	}).addTo(map);
 
 	L.control.graphicScale({
-		doubleLine: true,
-		// fill: 'line'
+		// doubleLine: true,
+		fill: 'line'
 	}).addTo(map);
 
 })();
