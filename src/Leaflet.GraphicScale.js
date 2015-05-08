@@ -10,7 +10,9 @@ L.Control.GraphicScale = L.Control.extend({
         imperial: false,
         updateWhenIdle: false,
         minUnitWidth: 30,
-        maxUnitsWidth: 240
+        maxUnitsWidth: 240,
+        fill: 'hollow',
+        doubleLine : false
     },
 
     onAdd: function (map) {
@@ -22,28 +24,72 @@ L.Control.GraphicScale = L.Control.extend({
         this._possibleDivisionsLen = this._possibleDivisions.length;
 
 
+        var uberContainer = L.DomUtil.create('div','uberContainer');
+
         var className = 'leaflet-control-scale',
-            container = L.DomUtil.create('div', className),
+            containerLegacy = L.DomUtil.create('div', className, uberContainer),
             options = this.options;
 
-        this._addScales(options, className, container);
+        this._addScales(options, className, containerLegacy);
 
-        this._tpl = L.DomUtil.get('scaleTpl').innerHTML;
-        this._scale.innerHTML = this._tpl ;
+        this._addScale(uberContainer, options);
 
         map.on(options.updateWhenIdle ? 'moveend' : 'move', this._update, this);
         map.whenReady(this._update, this);
 
 
-        return container;
+        return uberContainer;
     },
 
     onRemove: function (map) {
         map.off(this.options.updateWhenIdle ? 'moveend' : 'move', this._update, this);
     },
 
+    _buildScaleDom: function() {
+        var root = document.createElement('div');
+        var units = document.createElement('div');
+        units.className = 'units';
+        root.appendChild(units);
+
+        this._units = [];
+        this._unitsLbls = [];
+
+        for (var i = 0; i < 5; i++) {
+            var unit = L.DomUtil.create('div', 'unit');
+            units.appendChild(unit);
+            this._units.push(unit);
+
+            var unitLbl = L.DomUtil.create('div', 'lbl');
+            unit.appendChild(unitLbl);
+            this._unitsLbls.push(unit);
+
+            var l1 = L.DomUtil.create('div', 'l1');
+            unit.appendChild( l1 );
+
+            var l2 = L.DomUtil.create('div', 'l2');
+            unit.appendChild( l2 );
+
+            l1.appendChild( L.DomUtil.create('div', 'l1inner') );
+            l2.appendChild( L.DomUtil.create('div', 'l2inner') );
+
+        }
+
+        return root;
+    },
+
+    _addScale: function (container, options) {
+        var classNames = ['leaflet-control-graphicscale'];
+        if (options.fill) {
+            classNames.push('fill');
+            classNames.push('fill-'+options.fill);
+        }
+        
+        this._scale = L.DomUtil.create('div', classNames.join(' '), container);
+        this._scale.appendChild( this._buildScaleDom() );
+    },
+
     _addScales: function (options, className, container) {
-        this._scale = L.DomUtil.create('div', className + '-line', container);
+        
         if (options.metric) {
             this._mScale = L.DomUtil.create('div', className + '-line', container);
         }
@@ -77,9 +123,6 @@ L.Control.GraphicScale = L.Control.extend({
 
     _updateScale: function(dist, options) {
 
-
-
-
         var maxMeters = dist;
         
         var scale = this._getBestScale(maxMeters, options.minUnitWidth, options.maxUnitsWidth);
@@ -104,8 +147,6 @@ L.Control.GraphicScale = L.Control.extend({
             return scaleB.score - scaleA.score;
         });
 
-        console.log(possibleScales)
-
         return possibleScales[0];
     },
 
@@ -125,7 +166,7 @@ L.Control.GraphicScale = L.Control.extend({
 
                     var score = unit.unitScore + numUnitsScore + totalWidthPxScore;
 
-                    //penalty when unit / numUnits associations look weird
+                    //penalty when unit / numUnits association looks weird
                     if ( 
                         unit.unitDivision === 0.25 && numUnits === 3 ||
                         unit.unitDivision === 0.5 && numUnits === 3 ||
@@ -272,7 +313,6 @@ L.Map.addInitHook(function () {
         this.addControl(this.graphicScaleControl);
     }
 });
-
 
 L.control.graphicScale = function (options) {
     return new L.Control.GraphicScale(options);
