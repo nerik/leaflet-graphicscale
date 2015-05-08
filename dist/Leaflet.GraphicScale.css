@@ -12,7 +12,7 @@
   width: 40px; }
   .leaflet-control-graphicscale .unit .l1, .leaflet-control-graphicscale .unit .l2 {
     width: 100%;
-    border-color: #000;
+    border-color: black;
     border-style: solid; }
   .leaflet-control-graphicscale .unit .l2 {
     height: 0;

@@ -9,12 +9,18 @@ L.Control.GraphicScale = L.Control.extend({
         metric: true,
         imperial: false,
         updateWhenIdle: false,
-        minUnitWidth: 40,
-        maxUnitsWidth: 200
+        minUnitWidth: 30,
+        maxUnitsWidth: 240
     },
 
     onAdd: function (map) {
         this._map = map;
+
+        this._possibleUnitsNum = [3, 5, 2, 4];
+        this._possibleUnitsNumLen = this._possibleUnitsNum.length;
+        this._possibleDivisions = [1, 0.5, 0.25, 0.2];
+        this._possibleDivisionsLen = this._possibleDivisions.length;
+
 
         var className = 'leaflet-control-scale',
             container = L.DomUtil.create('div', className),
@@ -70,56 +76,102 @@ L.Control.GraphicScale = L.Control.extend({
     },
 
     _updateScale: function(dist, options) {
+
+
+
+
         var maxMeters = dist;
-        var exp = (Math.floor(maxMeters) + '').length + 1;
+        
+        var scale = this._getBestScale(maxMeters, options.minUnitWidth, options.maxUnitsWidth);
 
-        var unitWidthPx, unitMeters;
-        for (var i = exp*2; i > 0; i--) {
-            var meters = Math.pow(10, Math.ceil(i/2) );
-            if (i%2===1) meters /= 2;
-            console.log(meters)
-            var r = meters/maxMeters;
-            var widthPx = this._map.getSize().x * r;
-            if (widthPx<options.minUnitWidth) {
-                break;
+        this._render(scale.unit.unitPx, scale.numUnits, scale.unit.unitMeters);
+
+    },
+
+    _getBestScale: function(maxMeters, minUnitWidthPx, maxUnitsWidthPx) {
+
+        //favor full units (not 500, 25, etc)
+        //favor multiples in this order: [3, 2, 5, 4]
+        //units should have a minUnitWidth
+        //full scale width should be below maxUnitsWidth
+        //full scale width should be above minUnitsWidth ?
+
+        var possibleUnits = this._getPossibleUnits(maxMeters, minUnitWidthPx);
+
+        var possibleScales = this._getPossibleScales(possibleUnits, maxUnitsWidthPx);
+
+        possibleScales.sort(function(scaleA, scaleB) {
+            return scaleB.score - scaleA.score;
+        });
+
+        console.log(possibleScales)
+
+        return possibleScales[0];
+    },
+
+    _getPossibleScales: function(possibleUnits, maxUnitsWidthPx) {
+        var scales = [];
+        for (var i = 0; i < this._possibleUnitsNumLen; i++) {
+            var numUnits = this._possibleUnitsNum[i];
+            var numUnitsScore = this._possibleUnitsNumLen-i;
+            
+            for (var j = 0; j < possibleUnits.length; j++) {
+                var unit = possibleUnits[j];
+                var totalWidthPx = unit.unitPx * numUnits;
+                if (totalWidthPx < maxUnitsWidthPx) {
+
+                    var totalWidthPxScore = 1-(maxUnitsWidthPx - totalWidthPx) / maxUnitsWidthPx;
+                    totalWidthPxScore *= 3;
+
+                    var score = unit.unitScore + numUnitsScore + totalWidthPxScore;
+
+                    //penalty when unit / numUnits associations look weird
+                    if ( 
+                        unit.unitDivision === 0.25 && numUnits === 3 ||
+                        unit.unitDivision === 0.5 && numUnits === 3 ||
+                        unit.unitDivision === 0.25 && numUnits === 5
+                        ) {
+                        score -= 2;
+                    }
+
+                    scales.push({
+                        unit: unit,
+                        totalWidthPx: totalWidthPx,
+                        numUnits: numUnits,
+                        score: score
+                    });
+                }
             }
-            unitMeters = meters;
-            unitWidthPx = widthPx;
         }
-        console.log('??'+unitMeters)
 
-        // console.log(unitWidthPx);
+        return scales;
+    },
 
-        //multiples (number of units displayed) by order of preference
-        var unitsMultiples = [3, 2, 5, 4];
-        var unitsMultiple;
-        var shortest = Number.POSITIVE_INFINITY;
-        var shortestWithUnit;
-        var totalWidth;
+    _getPossibleUnits: function(maxMeters, minUnitWidthPx) {
+        var exp = (Math.floor(maxMeters) + '').length;
 
-        for (var j = 0; j < unitsMultiples.length; j++) {
-            var multiple = unitsMultiples[j];
-            // console.log(multiple)
-            totalWidth = multiple * unitWidthPx;
-            if (totalWidth<shortest) {
-                shortest = totalWidth;
-                unitsMultiple = multiple;
-            }
-            if ( (multiple * unitWidthPx) < options.maxUnitsWidth) {
-                unitsMultiple = multiple;
-                break;
+        var unitMetersPow;
+        var units = [];
+
+        for (var i = exp; i > 0; i--) {
+            unitMetersPow = Math.pow(10, i);
+
+            for (var j = 0; j < this._possibleDivisionsLen; j++) {
+                var unitMeters = unitMetersPow * this._possibleDivisions[j];
+                var unitPx = this._map.getSize().x * (unitMeters/maxMeters);
+
+                if (unitPx < minUnitWidthPx) {
+                    return units;
+                }
+
+                units.push({
+                    unitMeters: unitMeters, 
+                    unitPx: unitPx, 
+                    unitDivision: this._possibleDivisions[j],
+                    unitScore: this._possibleDivisionsLen-j });
+
             }
         }
-        console.log('--->' + unitsMultiple)
-        console.log('--->' + unitsMultiple * unitWidthPx)
-
-        // console.log('-----');
-        // console.log(unitsMultiple);
-        // console.log(unitMeters);
-        // console.log('-----');
-
-        this._render(unitWidthPx, unitsMultiple, unitMeters);
-
     },
 
     _render: function(unitWidthPx, unitsMultiple, unitMeters) {
