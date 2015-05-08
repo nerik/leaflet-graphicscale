@@ -83,9 +83,13 @@ L.Control.GraphicScale = L.Control.extend({
             classNames.push('fill');
             classNames.push('fill-'+options.fill);
         }
+        if (options.doubleLine) {
+            classNames.push('double')
+        }
         
         this._scale = L.DomUtil.create('div', classNames.join(' '), container);
         this._scale.appendChild( this._buildScaleDom() );
+        // this._scale.innerHTML = L.DomUtil.get('scaleTpl').innerHTML;
     },
 
     _addScales: function (options, className, container) {

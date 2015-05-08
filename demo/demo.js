@@ -7,6 +7,9 @@
 	    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
 	}).addTo(map);
 
-	L.control.graphicScale().addTo(map);
+	L.control.graphicScale({
+		doubleLine: true,
+		// fill: 'line'
+	}).addTo(map);
 
 })();

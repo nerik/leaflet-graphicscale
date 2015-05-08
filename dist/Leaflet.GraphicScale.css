@@ -19,13 +19,14 @@
     border-width: 0; }
   .leaflet-control-graphicscale .unit .l1 {
     height: 6px;
-    border-width: 1px 0 1px 1px; }
-  .leaflet-control-graphicscale .unit:not(.hidden):last-child .l1 {
-    border-right-width: 1px; }
+    border-width: 1px 1px 1px 0; }
+  .leaflet-control-graphicscale .unit:first-child .l1 {
+    border-left-width: 1px; }
   .leaflet-control-graphicscale .unit.hidden {
-    width: 0;
-    height: 0;
-    border-width: 0; }
+    width: 0; }
+    .leaflet-control-graphicscale .unit.hidden .l1, .leaflet-control-graphicscale .unit.hidden .l2 {
+      height: 0;
+      border-width: 0; }
     .leaflet-control-graphicscale .unit.hidden .lbl {
       opacity: 0; }
 .leaflet-control-graphicscale .l1inner, .leaflet-control-graphicscale .l2inner {
@@ -34,9 +35,9 @@
   position: relative; }
 .leaflet-control-graphicscale.double .unit .l2 {
   height: 6px;
-  border-width: 0 0 1px 1px; }
-.leaflet-control-graphicscale.double .unit:last-child .l2 {
-  border-right-width: 1px; }
+  border-width: 0 1px 1px 0; }
+.leaflet-control-graphicscale.double .unit:first-child .l2 {
+  border-left-width: 1px; }
 .leaflet-control-graphicscale.fill .unit:nth-child(odd) .l1 .l1inner {
   background-color: #000; }
 .leaflet-control-graphicscale.fill .unit:nth-child(even) .l2 .l2inner {
@@ -49,6 +50,9 @@
   top: 2px; }
 .leaflet-control-graphicscale.fill-hollow .l1inner, .leaflet-control-graphicscale.fill-hollow .l2inner {
   top: 1px;
-  left: 1px;
+  left: 2px;
   height: calc(100% - 2px);
   width: calc(100% - 3px); }
+.leaflet-control-graphicscale.fill-hollow .unit:first-child .l1inner {
+  left: 1px;
+  width: calc(100% - 2px); }

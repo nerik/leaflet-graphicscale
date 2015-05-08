@@ -35,17 +35,20 @@ $fillHollowPadding: 1px;
 
 		.l1 {
 			height: $lineHeight;
-			border-width: $borderWidth 0 $borderWidth $borderWidth;
+			border-width: $borderWidth $borderWidth $borderWidth 0;
 		}
 
-		&:not(.hidden):last-child .l1 {
-			border-right-width: $borderWidth;
+		&:first-child .l1 {
+			border-left-width: $borderWidth;
 		}
 
 		&.hidden {
 			width: 0;
-			height: 0;
-			border-width: 0;
+
+			.l1, .l2 {
+				height: 0;
+				border-width: 0;				
+			}
 
 			.lbl {
 				opacity: 0;
@@ -64,11 +67,11 @@ $fillHollowPadding: 1px;
 		.unit {
 			.l2 {
 				height: $lineHeight;
-				border-width: 0 0 $borderWidth $borderWidth;
+				border-width: 0 $borderWidth $borderWidth 0;
 			}
 
-			&:last-child .l2 {
-				border-right-width: $borderWidth;
+			&:first-child .l2 {
+				border-left-width: $borderWidth;
 			}
 		}
 
@@ -103,9 +106,14 @@ $fillHollowPadding: 1px;
 	&.fill-hollow {
 		.l1inner, .l2inner {
 			top: $fillHollowPadding;
-			left: $fillHollowPadding;
+			left: $borderWidth + $fillHollowPadding;
 			height: calc(100% - 2px);
 			width: calc(100% - 3px);
+		}
+
+		.unit:first-child .l1inner {
+			left: $fillHollowPadding;
+			width: calc(100% - 2px);
 		}
 	}
 }
