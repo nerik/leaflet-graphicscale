@@ -1,11 +1,13 @@
 (function() {
 	'use strict';
 
-	var map = L.map('map').setView([48.856614, 2.352222], 8);
+	var map = L.map('map').setView([16.252583, -61.539917], 10);
 
-	L.tileLayer('http://{s}.tile.openstreetmap.se/hydda/full/{z}/{x}/{y}.png', {
-	    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
-	}).addTo(map);
+
+    L.tileLayer('https://{s}.tiles.mapbox.com/v3/{key}/{z}/{x}/{y}.png', {
+        key: 'nerik.m4nlm06k',
+        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors | &copy; <a href="http://mapbox.com">Mapbox</a>'
+    }).addTo(map);
 
 	L.control.graphicScale({
 		// doubleLine: true,

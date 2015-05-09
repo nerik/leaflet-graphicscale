@@ -67,10 +67,10 @@ L.Control.GraphicScale = L.Control.extend({
                 this._zeroLbl = L.DomUtil.create('div', 'lbl zeroLbl');
                 unit.appendChild(this._zeroLbl);
             }
+
             var unitLbl = L.DomUtil.create('div', 'lbl unitLbl');
             unit.appendChild(unitLbl);
             this._unitsLbls.push(unitLbl);
-
 
             var l1 = L.DomUtil.create('div', 'l1');
             unit.appendChild( l1 );
