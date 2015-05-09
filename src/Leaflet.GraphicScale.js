@@ -89,24 +89,16 @@ L.Control.GraphicScale = L.Control.extend({
             halfWorldMeters = 6378137 * Math.PI * Math.cos(centerLat * Math.PI / 180),
             //length of this arc from map left to map right
             dist = halfWorldMeters * (bounds.getNorthEast().lng - bounds.getSouthWest().lng) / 180,
-
-            size = this._map.getSize(),
-            options = this.options,
-            maxMeters = 0;
-
+            size = this._map.getSize();
 
         if (size.x > 0) {
-            var scaleWidthRatio = options.maxWidth / size.x;
-            maxMeters = dist * scaleWidthRatio;
-            this._updateScale(dist, options);
+            this._updateScale(dist, this.options);
         }
 
 
     },
 
-    _updateScale: function(dist, options) {
-
-        var maxMeters = dist;
+    _updateScale: function(maxMeters, options) {
         
         var scale = this._getBestScale(maxMeters, options.minUnitWidth, options.maxUnitsWidth);
 
@@ -122,7 +114,7 @@ L.Control.GraphicScale = L.Control.extend({
         //full scale width should be below maxUnitsWidth
         //full scale width should be above minUnitsWidth ?
 
-        var possibleUnits = this._getPossibleUnits(maxMeters, minUnitWidthPx);
+        var possibleUnits = this._getPossibleUnits( maxMeters, minUnitWidthPx, this._map.getSize().x );
 
         var possibleScales = this._getPossibleScales(possibleUnits, maxUnitsWidthPx);
 
@@ -171,7 +163,7 @@ L.Control.GraphicScale = L.Control.extend({
         return scales;
     },
 
-    _getPossibleUnits: function(maxMeters, minUnitWidthPx) {
+    _getPossibleUnits: function(maxMeters, minUnitWidthPx, mapWidthPx) {
         var exp = (Math.floor(maxMeters) + '').length;
 
         var unitMetersPow;
@@ -182,7 +174,7 @@ L.Control.GraphicScale = L.Control.extend({
 
             for (var j = 0; j < this._possibleDivisionsLen; j++) {
                 var unitMeters = unitMetersPow * this._possibleDivisions[j];
-                var unitPx = this._map.getSize().x * (unitMeters/maxMeters);
+                var unitPx = mapWidthPx * (unitMeters/maxMeters);
 
                 if (unitPx < minUnitWidthPx) {
                     return units;

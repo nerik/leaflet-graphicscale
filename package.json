@@ -4,7 +4,7 @@
   "description": "A graphic scale for Leaflet.js that looks sharp",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha",
     "build:js": "uglifyjs src/Leaflet.GraphicScale.js > dist/Leaflet.GraphicScale.js",
     "build:css": "sass src/Leaflet.GraphicScale.scss > dist/Leaflet.GraphicScale.css",
     "build": "npm run build:css && npm run build:js",
@@ -31,9 +31,13 @@
   },
   "homepage": "https://github.com/nerik/leaflet-graphicscale",
   "devDependencies": {
+    "chai": "^2.3.0",
     "http-server": "^0.8.0",
+    "jsdom": "^5.3.0",
     "leaflet": "^0.7.3",
     "live-reload": "^1.1.0",
+    "mocha": "^2.2.4",
+    "mocha-jsdom": "^0.3.0",
     "onchange": "^1.1.0",
     "parallelshell": "^1.1.1",
     "uglify-js": "^2.4.20"
