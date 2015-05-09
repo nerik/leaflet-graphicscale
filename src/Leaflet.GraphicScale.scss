@@ -13,15 +13,23 @@ $fillLineHeight: 2px;
 $fillHollowPadding: 1px;
 
 .leaflet-control-graphicscale {
+	padding-left: 10px;
 
 	.lbl {
-		position: relative;
-	  	left: 100%;
-	  	width: 20px;
+		width: 20px;
 	  	text-align: center;
 	  	margin-left: -10px;
+	}
+
+	.unitLbl {
+		position: relative;
+	  	left: 100%;
 	  	opacity: 1;
 	  	@include transition(opacity, .4s, linear);
+	}
+
+	.zeroLbl {
+		position: absolute;
 	}
 
 	.unit {

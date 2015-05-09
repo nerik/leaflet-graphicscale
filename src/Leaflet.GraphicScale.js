@@ -63,9 +63,14 @@ L.Control.GraphicScale = L.Control.extend({
             units.appendChild(unit);
             this._units.push(unit);
 
-            var unitLbl = L.DomUtil.create('div', 'lbl');
+            if (i===0) {
+                this._zeroLbl = L.DomUtil.create('div', 'lbl zeroLbl');
+                unit.appendChild(this._zeroLbl);
+            }
+            var unitLbl = L.DomUtil.create('div', 'lbl unitLbl');
             unit.appendChild(unitLbl);
             this._unitsLbls.push(unitLbl);
+
 
             var l1 = L.DomUtil.create('div', 'l1');
             unit.appendChild( l1 );
@@ -129,7 +134,7 @@ L.Control.GraphicScale = L.Control.extend({
         var scales = [];
         for (var i = 0; i < this._possibleUnitsNumLen; i++) {
             var numUnits = this._possibleUnitsNum[i];
-            var numUnitsScore = this._possibleUnitsNumLen-i;
+            var numUnitsScore = (this._possibleUnitsNumLen-i)*0.5;
             
             for (var j = 0; j < possibleUnits.length; j++) {
                 var unit = possibleUnits[j];
@@ -197,6 +202,8 @@ L.Control.GraphicScale = L.Control.extend({
         if (displayUnit === 'km') unitLength /= 1000;
 
 
+        this._zeroLbl.innerHTML = '0' + displayUnit; 
+
         for (var i = 0; i < this._units.length; i++) {
             var u = this._units[i];
 
@@ -204,7 +211,12 @@ L.Control.GraphicScale = L.Control.extend({
                 u.style.width = unitWidthPx + 'px';
                 u.className = 'unit';
                 var lbl = this._unitsLbls[i];
-                lbl.innerHTML = ( (i+1)*unitLength );
+                var lblText  = ( (i+1)*unitLength );
+
+                if (i === unitsMultiple-1) {
+                    lblText += displayUnit;
+                }
+                lbl.innerHTML = lblText;
             } else {
                 u.style.width = 0;
                 u.className = 'unit hidden';
