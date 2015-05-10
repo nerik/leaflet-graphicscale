@@ -20,7 +20,9 @@ L.Control.GraphicScale = L.Control.extend({
         this._possibleDivisions = [1, 0.5, 0.25, 0.2];
         this._possibleDivisionsLen = this._possibleDivisions.length;
 
-        this._scale = this._addScale(this.options);
+        this._scaleInner = this._buildScaleDom();
+        this._scale = this._addScale(this._scaleInner);
+        this._setStyle(this.options.fill);
 
         map.on(this.options.updateWhenIdle ? 'moveend' : 'move', this._update, this);
         map.whenReady(this._update, this);
@@ -32,25 +34,32 @@ L.Control.GraphicScale = L.Control.extend({
         map.off(this.options.updateWhenIdle ? 'moveend' : 'move', this._update, this);
     },
 
-    _addScale: function (options) {
-        var classNames = ['leaflet-control-graphicscale'];
-        if (options.fill) {
-            classNames.push('filled');
-            classNames.push('filled-'+options.fill);
-        }
-        if (options.doubleLine) {
-            classNames.push('double');
-        }
+    _addScale: function (scaleInner) {
         
-        var scale = L.DomUtil.create('div', classNames.join(' '));
-        scale.appendChild( this._buildScaleDom() );
-        // this._scale.innerHTML = L.DomUtil.get('scaleTpl').innerHTML;
+        var scale = L.DomUtil.create('div');
+        scale.className = 'leaflet-control-graphicscale';
+        scale.appendChild( scaleInner );
 
         return scale;
     },
 
+    _setStyle: function (fill) {
+        var classNames = ['leaflet-control-graphicscale-inner'];
+        if (fill && fill != 'nofill') {
+            classNames.push('filled');
+            classNames.push('filled-'+fill);
+        }
+        // if (options.doubleLine) {
+        //     classNames.push('double');
+        // }
+
+        this._scaleInner.className = classNames.join(' ');
+    },
+
     _buildScaleDom: function() {
         var root = document.createElement('div');
+        root.className = 'leaflet-control-graphicscale-inner';
+
         var units = document.createElement('div');
         units.className = 'units';
         root.appendChild(units);
