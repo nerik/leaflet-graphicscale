@@ -8,11 +8,26 @@ body {
 }
 
 .leaflet-control-graphicscale {
-    font-family: 'Italianno', cursive;
-    font-size: 20px;
     background-color: rgb(254, 246, 237);
     background-image: url(noise.png);
     padding: 20px 45px 25px 35px;
     box-shadow: 0px 0px 30px rgba(52, 38, 13, .5);
+    color: rgb(107, 55, 32);
 }
 
+.leaflet-control-graphicscale .label {
+    font-family: 'Italianno', cursive;
+    font-size: 24px;
+}
+
+.leaflet-control-graphicscale .labelSub {
+    /*font-size: 20px;*/
+}
+
+.leaflet-control-graphicscale .line {
+    border-color: rgb(107, 55, 32);
+}
+
+.leaflet-control-graphicscale .line .fill {
+    background-color: rgb(107, 55, 32);
+};

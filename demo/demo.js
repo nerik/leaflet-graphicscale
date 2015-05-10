@@ -11,7 +11,7 @@
 
 	L.control.graphicScale({
 		// doubleLine: true,
-		fill: 'hollow'
+		fill: 'line'
 	}).addTo(map);
 
 })();

@@ -35,8 +35,8 @@ L.Control.GraphicScale = L.Control.extend({
     _addScale: function (options) {
         var classNames = ['leaflet-control-graphicscale'];
         if (options.fill) {
-            classNames.push('fill');
-            classNames.push('fill-'+options.fill);
+            classNames.push('filled');
+            classNames.push('filled-'+options.fill);
         }
         if (options.doubleLine) {
             classNames.push('double');
@@ -64,22 +64,22 @@ L.Control.GraphicScale = L.Control.extend({
             this._units.push(unit);
 
             if (i===0) {
-                this._zeroLbl = L.DomUtil.create('div', 'lbl zeroLbl');
+                this._zeroLbl = L.DomUtil.create('div', 'label zeroLabel');
                 unit.appendChild(this._zeroLbl);
             }
 
-            var unitLbl = L.DomUtil.create('div', 'lbl unitLbl');
+            var unitLbl = L.DomUtil.create('div', 'label unitLabel');
             unit.appendChild(unitLbl);
             this._unitsLbls.push(unitLbl);
 
-            var l1 = L.DomUtil.create('div', 'l1');
+            var l1 = L.DomUtil.create('div', 'line');
             unit.appendChild( l1 );
 
-            var l2 = L.DomUtil.create('div', 'l2');
+            var l2 = L.DomUtil.create('div', 'line2');
             unit.appendChild( l2 );
 
-            l1.appendChild( L.DomUtil.create('div', 'l1inner') );
-            l2.appendChild( L.DomUtil.create('div', 'l2inner') );
+            if (i%2 === 0) l1.appendChild( L.DomUtil.create('div', 'fill') );
+            if (i%2 === 1) l2.appendChild( L.DomUtil.create('div', 'fill') );
 
         }
 
@@ -206,21 +206,29 @@ L.Control.GraphicScale = L.Control.extend({
 
         for (var i = 0; i < this._units.length; i++) {
             var u = this._units[i];
+            var lbl = this._unitsLbls[i];
+            var lblClassNames = ['label', 'unitLabel'];
 
             if (i < unitsMultiple) {
                 u.style.width = unitWidthPx + 'px';
                 u.className = 'unit';
-                var lbl = this._unitsLbls[i];
+        
                 var lblText  = ( (i+1)*unitLength );
 
                 if (i === unitsMultiple-1) {
                     lblText += displayUnit;
+                    lblClassNames.push('labelLast');
+                } else {
+                    lblClassNames.push('labelSub');
                 }
                 lbl.innerHTML = lblText;
             } else {
                 u.style.width = 0;
                 u.className = 'unit hidden';
             }
+
+            lbl.className = lblClassNames.join(' ');
+
         }
     },
 
