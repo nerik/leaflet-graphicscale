@@ -13,7 +13,7 @@ body {
 .leaflet-control-graphicscale {
     background-color: rgb(254, 246, 237);
     background-image: url(noise.png);
-    padding: 20px 45px 25px 35px;
+    padding: 20px 45px 30px 35px;
     box-shadow: 0px 0px 30px rgba(52, 38, 13, .5);
     color: rgb(107, 55, 32);
 }
@@ -24,7 +24,8 @@ body {
 }
 
 .leaflet-control-graphicscale .labelSub {
-    font-size: 20px;
+    font-size: 21px;
+    margin-bottom: 2px;
 }
 
 .leaflet-control-graphicscale .line {
@@ -35,13 +36,21 @@ body {
     background-color: rgb(107, 55, 32);
 }
 
-.scaleText h1 {
-    font-family: 'Italianno', cursive;
-    font-size: 30px;
+.scaleText {
+    margin-bottom: 35px;
+    text-align: center;
+}
+
+.scaleText h1, .scaleText p {
     margin: 0;
 }
 
+.scaleText h1 {
+    font-family: 'Italianno', cursive;
+    font-size: 30px;
+}
+
 .scaleText .choice {
-    margin: 5px;
+    margin: 0 5px;
     cursor: pointer;
 }
