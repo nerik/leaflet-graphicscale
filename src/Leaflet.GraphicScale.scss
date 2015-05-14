@@ -14,19 +14,27 @@ $fillHollowPadding: 1px;
 
 .leaflet-control-graphicscale-inner {
 
+	.units {
+		display: inline-block;
+	}
+
+	.subunits {
+		display: none;
+	}
+
 	.label {
 		width: 100px;
 	  	text-align: center;
 	}
 
-	.unitLabel, .zeroLabel  {
+	.divisionLabel, .zeroLabel  {
 		position: absolute;
 	  	bottom: 0;
 	  	opacity: 1;
 	  	@include transition(opacity, .4s, linear);
 	}
 
-	.unitLabel {
+	.divisionLabel {
 	  	right: 0;
 	    margin-right: -50px;
 	}
@@ -36,7 +44,7 @@ $fillHollowPadding: 1px;
 	    margin-left: -50px;
 	}
 
-	.unit {
+	.division {
 		display: inline-block;
 		position: relative;
 		width: 40px;
@@ -82,8 +90,14 @@ $fillHollowPadding: 1px;
 		position: relative;
 	}
 
+	&.showsubunits {
+		.subunits {
+			display: inline-block;
+		}
+	}
+
 	&.double {
-		.unit {
+		.division {
 			.line2 {
 				height: $lineHeight;
 				border-width: 0 $borderWidth $borderWidth 0;
@@ -127,7 +141,7 @@ $fillHollowPadding: 1px;
 			width: calc(100% - 3px);
 		}
 
-		.unit:first-child .line .fill {
+		.division:first-child .line .fill {
 			left: $fillHollowPadding;
 			width: calc(100% - 2px);
 		}

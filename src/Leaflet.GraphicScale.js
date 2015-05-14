@@ -9,6 +9,7 @@ L.Control.GraphicScale = L.Control.extend({
         minUnitWidth: 30,
         maxUnitsWidth: 240,
         fill: 'hollow',
+        showSubunits: false,
         doubleLine : false
     },
 
@@ -19,10 +20,28 @@ L.Control.GraphicScale = L.Control.extend({
         this._possibleUnitsNumLen = this._possibleUnitsNum.length;
         this._possibleDivisions = [1, 0.5, 0.25, 0.2];
         this._possibleDivisionsLen = this._possibleDivisions.length;
+        this._possibleDivisionsSub = { 
+            1: {
+                num: 2,
+                division:0.5
+            }, 
+            0.5: {
+                num: 5,
+                division: 0.1
+            },
+            0.25: {
+                num: 5,
+                division: 0.05 
+            },
+            0.2: {
+                num: 2,
+                division: 0.1
+            } 
+        };
 
-        this._scaleInner = this._buildScaleDom();
+        this._scaleInner = this._buildScale();
         this._scale = this._addScale(this._scaleInner);
-        this._setStyle(this.options.fill);
+        this._setStyle(this.options.fill, this.options.showSubunits);
 
         map.on(this.options.updateWhenIdle ? 'moveend' : 'move', this._update, this);
         map.whenReady(this._update, this);
@@ -43,12 +62,18 @@ L.Control.GraphicScale = L.Control.extend({
         return scale;
     },
 
-    _setStyle: function (fill) {
+    _setStyle: function (fill, showSubunits) {
         var classNames = ['leaflet-control-graphicscale-inner'];
         if (fill && fill !== 'nofill') {
             classNames.push('filled');
             classNames.push('filled-'+fill);
         }
+
+        if (showSubunits) {
+            classNames.push('showsubunits');
+        }
+
+
         // if (options.doubleLine) {
         //     classNames.push('double');
         // }
@@ -56,45 +81,59 @@ L.Control.GraphicScale = L.Control.extend({
         this._scaleInner.className = classNames.join(' ');
     },
 
-    _buildScaleDom: function() {
+    _buildScale: function() {
         var root = document.createElement('div');
         root.className = 'leaflet-control-graphicscale-inner';
 
-        var units = document.createElement('div');
-        units.className = 'units';
-        root.appendChild(units);
+        var subunits = L.DomUtil.create('div', 'subunits', root);
+        var units = L.DomUtil.create('div', 'units', root);
 
         this._units = [];
         this._unitsLbls = [];
+        this._subunits = [];
+        // this._subunitsLbls = [];
 
         for (var i = 0; i < 5; i++) {
-            var unit = L.DomUtil.create('div', 'unit');
+            var unit = this._buildDivision( i%2 === 0 );
             units.appendChild(unit);
             this._units.push(unit);
 
-            if (i===0) {
-                this._zeroLbl = L.DomUtil.create('div', 'label zeroLabel');
-                unit.appendChild(this._zeroLbl);
-            }
-
-            var unitLbl = L.DomUtil.create('div', 'label unitLabel');
+            var unitLbl = this._buildDivisionLbl();
             unit.appendChild(unitLbl);
             this._unitsLbls.push(unitLbl);
 
-            var l1 = L.DomUtil.create('div', 'line');
-            unit.appendChild( l1 );
-
-            var l2 = L.DomUtil.create('div', 'line2');
-            unit.appendChild( l2 );
-
-            if (i%2 === 0) l1.appendChild( L.DomUtil.create('div', 'fill') );
-            if (i%2 === 1) l2.appendChild( L.DomUtil.create('div', 'fill') );
+            var subunit = this._buildDivision( i%2 === 1 );
+            subunits.appendChild(subunit);
+            this._subunits.unshift(subunit);
 
         }
-
+        
+        this._zeroLbl = L.DomUtil.create('div', 'label zeroLabel');
+        this._zeroLbl.innerHTML = '0';
+        this._units[0].appendChild(this._zeroLbl);
+        
         return root;
     },
 
+    _buildDivision: function(fill) {
+        var item = L.DomUtil.create('div', 'division');
+
+        var l1 = L.DomUtil.create('div', 'line');
+        item.appendChild( l1 );
+
+        var l2 = L.DomUtil.create('div', 'line2');
+        item.appendChild( l2 );
+
+        if (fill)  l1.appendChild( L.DomUtil.create('div', 'fill') );
+        if (!fill) l2.appendChild( L.DomUtil.create('div', 'fill') );
+
+        return item;
+    },
+
+    _buildDivisionLbl: function() {
+        var itemLbl = L.DomUtil.create('div', 'label divisionLabel');
+        return itemLbl;
+    },
 
     _update: function () {
         var bounds = this._map.getBounds(),
@@ -116,14 +155,15 @@ L.Control.GraphicScale = L.Control.extend({
         
         var scale = this._getBestScale(maxMeters, options.minUnitWidth, options.maxUnitsWidth);
 
-        this._render(scale.unit.unitPx, scale.numUnits, scale.unit.unitMeters);
+        // this._render(scale.unit.unitPx, scale.numUnits, scale.unit.unitMeters);
+        this._render(scale);
 
     },
 
     _getBestScale: function(maxMeters, minUnitWidthPx, maxUnitsWidthPx) {
 
         //favor full units (not 500, 25, etc)
-        //favor multiples in this order: [3, 2, 5, 4]
+        //favor multiples in this order: [3, 5, 2, 4]
         //units should have a minUnitWidth
         //full scale width should be below maxUnitsWidth
         //full scale width should be above minUnitsWidth ?
@@ -136,7 +176,28 @@ L.Control.GraphicScale = L.Control.extend({
             return scaleB.score - scaleA.score;
         });
 
-        return possibleScales[0];
+        var scale = possibleScales[0]; 
+        scale.subunits = this._getSubunits(scale);
+        console.log(scale);
+
+        return scale;   
+    },
+
+    _getSubunits: function(scale) {
+        var subdivision = this._possibleDivisionsSub[scale.unit.unitDivision];
+
+        var subunit = {};
+        subunit.subunitDivision = subdivision.division;
+        subunit.subunitMeters = subdivision.division * (scale.unit.unitMeters / scale.unit.unitDivision);
+        subunit.subunitPx = subdivision.division * (scale.unit.unitPx / scale.unit.unitDivision);
+
+        var subunits = { 
+            subunit: subunit,
+            numSubunits: subdivision.num
+        };
+
+        return subunits;
+
     },
 
     _getPossibleScales: function(possibleUnits, maxUnitsWidthPx) {
@@ -204,36 +265,43 @@ L.Control.GraphicScale = L.Control.extend({
         }
     },
 
-    _render: function(unitWidthPx, unitsMultiple, unitMeters) {
+    _render: function(scale) {
+        this._renderPart(scale.unit.unitPx, scale.unit.unitMeters, scale.numUnits, this._units, this._unitsLbls);
+        this._renderPart(scale.subunits.subunit.subunitPx, scale.subunits.subunit.subunitMeters, scale.subunits.numSubunits, this._subunits);
+    },
 
-        var displayUnit = (unitMeters<1000) ? 'm' : 'km';
-        var unitLength = unitMeters;
-        if (displayUnit === 'km') unitLength /= 1000;
+    _renderPart: function(px, meters, num, divisions, divisionsLbls) {
 
-
-        this._zeroLbl.innerHTML = '0' + displayUnit; 
+        var displayUnit = (meters<1000) ? 'm' : 'km';
+        if (displayUnit === 'km') meters /= 1000;
 
         for (var i = 0; i < this._units.length; i++) {
-            var u = this._units[i];
-            var lbl = this._unitsLbls[i];
-            var lblClassNames = ['label', 'unitLabel'];
+            var division = divisions[i];
 
-            if (i < unitsMultiple) {
-                u.style.width = unitWidthPx + 'px';
-                u.className = 'unit';
+            if (i < num) {
+                division.style.width = px + 'px';
+                division.className = 'division';
         
-                var lblText  = ( (i+1)*unitLength );
+            } else {
+                division.style.width = 0;
+                division.className = 'division hidden';
+            }
 
-                if (i === unitsMultiple-1) {
+            if (!divisionsLbls) continue;
+
+            var lbl = divisionsLbls[i];
+            var lblClassNames = ['label', 'divisionLabel'];
+
+            if (i < num) {
+                var lblText = ( (i+1)*meters );
+
+                if (i === num-1) {
                     lblText += displayUnit;
                     lblClassNames.push('labelLast');
                 } else {
                     lblClassNames.push('labelSub');
                 }
                 lbl.innerHTML = lblText;
-            } else {
-                u.style.width = 0;
-                u.className = 'unit hidden';
             }
 
             lbl.className = lblClassNames.join(' ');
