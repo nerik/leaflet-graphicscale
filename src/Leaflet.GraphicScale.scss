@@ -13,27 +13,32 @@ $fillLineHeight: 2px;
 $fillHollowPadding: 1px;
 
 .leaflet-control-graphicscale-inner {
-	padding-left: 10px;
 
 	.label {
-		width: 20px;
+		width: 100px;
 	  	text-align: center;
-	  	margin-left: -10px;
 	}
 
-	.unitLabel {
-		position: relative;
-	  	left: 100%;
+	.unitLabel, .zeroLabel  {
+		position: absolute;
+	  	bottom: 0;
 	  	opacity: 1;
 	  	@include transition(opacity, .4s, linear);
 	}
 
+	.unitLabel {
+	  	right: 0;
+	    margin-right: -50px;
+	}
+
 	.zeroLabel {
-		position: absolute;
+		left: 0;
+	    margin-left: -50px;
 	}
 
 	.unit {
 		display: inline-block;
+		position: relative;
 		width: 40px;
 		@include transition(width, 0.4s, ease-in-out);
 
