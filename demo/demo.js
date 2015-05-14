@@ -11,7 +11,7 @@
 
 	var graphicScale = L.control.graphicScale({
 		// doubleLine: true,
-		fill: 'line'
+		fill: 'hollow'
 	}).addTo(map);
 
     var scaleText = L.DomUtil.create('div', 'scaleText' );

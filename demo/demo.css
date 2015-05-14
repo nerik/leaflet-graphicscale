@@ -3,8 +3,11 @@ body {
     padding: 0;
 }
 #map { 
-	height: 100vh;
-	width: 100%; 
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }
 
 .leaflet-control-graphicscale {
@@ -28,7 +31,7 @@ body {
     border-color: rgb(107, 55, 32);
 }
 
-.leaflet-control-graphicscale .line .fill {
+.leaflet-control-graphicscale .filled .fill {
     background-color: rgb(107, 55, 32);
 }
 

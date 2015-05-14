@@ -45,7 +45,7 @@ L.Control.GraphicScale = L.Control.extend({
 
     _setStyle: function (fill) {
         var classNames = ['leaflet-control-graphicscale-inner'];
-        if (fill && fill != 'nofill') {
+        if (fill && fill !== 'nofill') {
             classNames.push('filled');
             classNames.push('filled-'+fill);
         }
