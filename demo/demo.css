@@ -10,7 +10,7 @@ body {
     right: 0;
     bottom: 0;
 }
-
+/*
 .leaflet-control-graphicscale {
     background-color: rgb(254, 246, 237);
     background-image: url(noise.png);
@@ -54,4 +54,4 @@ body {
 .scaleText .choice {
     margin: 0 5px;
     cursor: pointer;
-}
+}*/

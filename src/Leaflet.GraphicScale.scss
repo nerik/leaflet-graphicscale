@@ -6,13 +6,15 @@
     transition: $transition-property $transition-time $method;
 }
 
-$lineHeight: 6px;
+$lineHeight: 16px;
 $borderWidth: 1px;
 $color: #000;
 $fillLineHeight: 2px;
 $fillHollowPadding: 1px;
 
 .leaflet-control-graphicscale-inner {
+	
+	margin-left: 10px;
 
 	.units {
 		display: inline-block;
@@ -25,6 +27,7 @@ $fillHollowPadding: 1px;
 	.label {
 		width: 100px;
 	  	text-align: center;
+    	margin-bottom: 10px;
 	}
 
 	.divisionLabel, .zeroLabel  {
@@ -51,8 +54,8 @@ $fillHollowPadding: 1px;
 		@include transition(width, 0.4s, ease-in-out);
 
 		.line, .line2 {
-			width: 100%;
 			border-style: solid;
+			position: relative;
 		}
 
 		.line2 {
@@ -62,11 +65,7 @@ $fillHollowPadding: 1px;
 
 		.line {
 			height: $lineHeight;
-			border-width: $borderWidth $borderWidth $borderWidth 0;
-		}
-
-		&:first-child .line {
-			border-left-width: $borderWidth;
+			// border-width: $borderWidth $borderWidth $borderWidth 0;
 		}
 
 		&.hidden {
@@ -84,9 +83,15 @@ $fillHollowPadding: 1px;
 
 	}
 
+	.units .division:first-child .line {
+		// border-left-width: $borderWidth;
+	}
+
+	.subunits .division .line {
+		// border-width: $borderWidth $borderWidth $borderWidth 0;
+	}
+
 	.fill {
-		width: 100%;
-		height: 100%;
 		position: relative;
 	}
 
@@ -135,15 +140,21 @@ $fillHollowPadding: 1px;
 
 	&.filled-hollow {
 		.fill {
+			// top: $fillHollowPadding;
+			// left: $borderWidth + $fillHollowPadding;
+			// height: calc(100% - 2px);
+			// width: calc(100% - 3px);
+			position: absolute;
 			top: $fillHollowPadding;
-			left: $borderWidth + $fillHollowPadding;
-			height: calc(100% - 2px);
-			width: calc(100% - 3px);
+			left: $fillHollowPadding;
+			right: $fillHollowPadding;
+			bottom: $fillHollowPadding;
 		}
 
-		.division:first-child .line .fill {
-			left: $fillHollowPadding;
-			width: calc(100% - 2px);
-		}
+		// .division:first-child .line .fill {
+		// 	left: $fillHollowPadding;
+		// 	width: calc(100% - 2px);
+		// }
 	}
+
 }

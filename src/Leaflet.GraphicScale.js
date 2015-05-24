@@ -9,7 +9,7 @@ L.Control.GraphicScale = L.Control.extend({
         minUnitWidth: 30,
         maxUnitsWidth: 240,
         fill: 'hollow',
-        showSubunits: false,
+        showSubunits: true,
         doubleLine : false
     },
 
@@ -72,7 +72,6 @@ L.Control.GraphicScale = L.Control.extend({
         if (showSubunits) {
             classNames.push('showsubunits');
         }
-
 
         // if (options.doubleLine) {
         //     classNames.push('double');
