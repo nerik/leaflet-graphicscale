@@ -90,7 +90,6 @@ L.Control.GraphicScale = L.Control.extend({
         this._units = [];
         this._unitsLbls = [];
         this._subunits = [];
-        // this._subunitsLbls = [];
 
         for (var i = 0; i < 5; i++) {
             var unit = this._buildDivision( i%2 === 0 );
@@ -110,6 +109,10 @@ L.Control.GraphicScale = L.Control.extend({
         this._zeroLbl = L.DomUtil.create('div', 'label zeroLabel');
         this._zeroLbl.innerHTML = '0';
         this._units[0].appendChild(this._zeroLbl);
+
+        this._subunitsLbl = L.DomUtil.create('div', 'label subunitsLabel');
+        this._subunitsLbl.innerHTML = '?';
+        this._subunits[4].appendChild(this._subunitsLbl);
         
         return root;
     },
@@ -192,7 +195,8 @@ L.Control.GraphicScale = L.Control.extend({
 
         var subunits = { 
             subunit: subunit,
-            numSubunits: subdivision.num
+            numSubunits: subdivision.num,
+            total: subdivision.num * subunit.subunitMeters
         };
 
         return subunits;
@@ -267,12 +271,14 @@ L.Control.GraphicScale = L.Control.extend({
     _render: function(scale) {
         this._renderPart(scale.unit.unitPx, scale.unit.unitMeters, scale.numUnits, this._units, this._unitsLbls);
         this._renderPart(scale.subunits.subunit.subunitPx, scale.subunits.subunit.subunitMeters, scale.subunits.numSubunits, this._subunits);
+        
+        var subunitsDisplayUnit = this._getDisplayUnit(scale.subunits.total);
+        this._subunitsLbl.innerHTML = ''+ subunitsDisplayUnit.amount + subunitsDisplayUnit.unit;
     },
 
     _renderPart: function(px, meters, num, divisions, divisionsLbls) {
 
-        var displayUnit = (meters<1000) ? 'm' : 'km';
-        if (displayUnit === 'km') meters /= 1000;
+        var displayUnit = this._getDisplayUnit(meters);
 
         for (var i = 0; i < this._units.length; i++) {
             var division = divisions[i];
@@ -280,7 +286,6 @@ L.Control.GraphicScale = L.Control.extend({
             if (i < num) {
                 division.style.width = px + 'px';
                 division.className = 'division';
-        
             } else {
                 division.style.width = 0;
                 division.className = 'division hidden';
@@ -292,10 +297,10 @@ L.Control.GraphicScale = L.Control.extend({
             var lblClassNames = ['label', 'divisionLabel'];
 
             if (i < num) {
-                var lblText = ( (i+1)*meters );
+                var lblText = ( (i+1)*displayUnit.amount );
 
                 if (i === num-1) {
-                    lblText += displayUnit;
+                    lblText += displayUnit.unit;
                     lblClassNames.push('labelLast');
                 } else {
                     lblClassNames.push('labelSub');
@@ -307,6 +312,14 @@ L.Control.GraphicScale = L.Control.extend({
 
         }
     },
+
+    _getDisplayUnit: function(meters) {
+        var displayUnit = (meters<1000) ? 'm' : 'km';
+        return {
+            unit: displayUnit,
+            amount: (displayUnit === 'km') ? meters / 1000 : meters
+        }
+    }
 
 });
 

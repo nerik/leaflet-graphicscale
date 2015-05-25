@@ -7,8 +7,7 @@
   .leaflet-control-graphicscale-inner .label {
     width: 100px;
     text-align: center;
-    margin-bottom: 10px; }
-  .leaflet-control-graphicscale-inner .divisionLabel, .leaflet-control-graphicscale-inner .zeroLabel {
+    margin-bottom: 10px;
     position: absolute;
     bottom: 0;
     opacity: 1;
@@ -20,7 +19,7 @@
   .leaflet-control-graphicscale-inner .divisionLabel {
     right: 0;
     margin-right: -50px; }
-  .leaflet-control-graphicscale-inner .zeroLabel {
+  .leaflet-control-graphicscale-inner .zeroLabel, .leaflet-control-graphicscale-inner .subunitsLabel {
     left: 0;
     margin-left: -50px; }
   .leaflet-control-graphicscale-inner .division {
@@ -39,20 +38,25 @@
       height: 0;
       border-width: 0; }
     .leaflet-control-graphicscale-inner .division .line {
-      height: 16px; }
+      height: 6px;
+      border-width: 1px 1px 1px 0; }
     .leaflet-control-graphicscale-inner .division.hidden {
       width: 0; }
       .leaflet-control-graphicscale-inner .division.hidden .line, .leaflet-control-graphicscale-inner .division.hidden .line2 {
         height: 0;
         border-width: 0; }
-      .leaflet-control-graphicscale-inner .division.hidden .label {
+      .leaflet-control-graphicscale-inner .division.hidden .label:not(.subunitsLabel) {
         opacity: 0; }
+  .leaflet-control-graphicscale-inner .units .division:first-child .line {
+    border-left-width: 1px; }
+  .leaflet-control-graphicscale-inner .subunits .division .line {
+    border-width: 1px 0 1px 1px; }
   .leaflet-control-graphicscale-inner .fill {
     position: relative; }
   .leaflet-control-graphicscale-inner.showsubunits .subunits {
     display: inline-block; }
   .leaflet-control-graphicscale-inner.double .division .line2 {
-    height: 16px;
+    height: 6px;
     border-width: 0 1px 1px 0; }
   .leaflet-control-graphicscale-inner.double .division:first-child .line2 {
     border-left-width: 1px; }
@@ -60,10 +64,10 @@
     background-color: #000; }
   .leaflet-control-graphicscale-inner.filled-line .line .fill {
     height: 2px;
-    top: 7px; }
+    top: 2px; }
   .leaflet-control-graphicscale-inner.filled-line.double .fill {
     height: 2px;
-    top: 7px; }
+    top: 2px; }
   .leaflet-control-graphicscale-inner.filled-hollow .fill {
     position: absolute;
     top: 1px;

@@ -6,7 +6,7 @@
     transition: $transition-property $transition-time $method;
 }
 
-$lineHeight: 16px;
+$lineHeight: 6px;
 $borderWidth: 1px;
 $color: #000;
 $fillLineHeight: 2px;
@@ -22,15 +22,12 @@ $fillHollowPadding: 1px;
 
 	.subunits {
 		display: none;
-	}
+	}	
 
 	.label {
 		width: 100px;
 	  	text-align: center;
     	margin-bottom: 10px;
-	}
-
-	.divisionLabel, .zeroLabel  {
 		position: absolute;
 	  	bottom: 0;
 	  	opacity: 1;
@@ -42,7 +39,7 @@ $fillHollowPadding: 1px;
 	    margin-right: -50px;
 	}
 
-	.zeroLabel {
+	.zeroLabel, .subunitsLabel {
 		left: 0;
 	    margin-left: -50px;
 	}
@@ -65,7 +62,7 @@ $fillHollowPadding: 1px;
 
 		.line {
 			height: $lineHeight;
-			// border-width: $borderWidth $borderWidth $borderWidth 0;
+			border-width: $borderWidth $borderWidth $borderWidth 0;
 		}
 
 		&.hidden {
@@ -76,7 +73,7 @@ $fillHollowPadding: 1px;
 				border-width: 0;				
 			}
 
-			.label {
+			.label:not(.subunitsLabel) {
 				opacity: 0;
 			}
 		}
@@ -84,11 +81,11 @@ $fillHollowPadding: 1px;
 	}
 
 	.units .division:first-child .line {
-		// border-left-width: $borderWidth;
+		border-left-width: $borderWidth;
 	}
 
 	.subunits .division .line {
-		// border-width: $borderWidth $borderWidth $borderWidth 0;
+		border-width: $borderWidth 0 $borderWidth $borderWidth;
 	}
 
 	.fill {
