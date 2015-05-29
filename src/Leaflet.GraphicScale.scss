@@ -13,7 +13,7 @@ $fillLineHeight: 2px;
 $fillHollowPadding: 1px;
 
 .leaflet-control-graphicscale-inner {
-	
+
 	margin-left: 10px;
 
 	.units {
@@ -22,7 +22,7 @@ $fillHollowPadding: 1px;
 
 	.subunits {
 		display: none;
-	}	
+	}
 
 	.label {
 		width: 100px;
@@ -65,19 +65,6 @@ $fillHollowPadding: 1px;
 			border-width: $borderWidth $borderWidth $borderWidth 0;
 		}
 
-		&.hidden {
-			width: 0;
-
-			.line, .line2 {
-				height: 0;
-				border-width: 0;				
-			}
-
-			.label:not(.subunitsLabel) {
-				opacity: 0;
-			}
-		}
-
 	}
 
 	.units .division:first-child .line {
@@ -104,13 +91,18 @@ $fillHollowPadding: 1px;
 				height: $lineHeight;
 				border-width: 0 $borderWidth $borderWidth 0;
 			}
+		}
 
-			&:first-child .line2 {
-				border-left-width: $borderWidth;
-			}
+		.units .division:first-child .line2 {
+			border-left-width: $borderWidth;
+		}
+
+		.subunits .division .line2 {
+			border-width: 0 0 $borderWidth $borderWidth;
 		}
 
 	}
+
 
 	&.filled {
 		.fill {
@@ -137,10 +129,6 @@ $fillHollowPadding: 1px;
 
 	&.filled-hollow {
 		.fill {
-			// top: $fillHollowPadding;
-			// left: $borderWidth + $fillHollowPadding;
-			// height: calc(100% - 2px);
-			// width: calc(100% - 3px);
 			position: absolute;
 			top: $fillHollowPadding;
 			left: $fillHollowPadding;
@@ -148,10 +136,19 @@ $fillHollowPadding: 1px;
 			bottom: $fillHollowPadding;
 		}
 
-		// .division:first-child .line .fill {
-		// 	left: $fillHollowPadding;
-		// 	width: calc(100% - 2px);
-		// }
+	}
+
+	.division.hidden {
+		width: 0;
+
+		.line, .line2 {
+			height: 0;
+			border-width: 0;
+		}
+
+		.label:not(.subunitsLabel) {
+			opacity: 0;
+		}
 	}
 
 }

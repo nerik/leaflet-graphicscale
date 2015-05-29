@@ -10,7 +10,7 @@ L.Control.GraphicScale = L.Control.extend({
         maxUnitsWidth: 240,
         fill: 'hollow',
         showSubunits: true,
-        doubleLine : false
+        doubleLine : true
     },
 
     onAdd: function (map) {
@@ -20,28 +20,28 @@ L.Control.GraphicScale = L.Control.extend({
         this._possibleUnitsNumLen = this._possibleUnitsNum.length;
         this._possibleDivisions = [1, 0.5, 0.25, 0.2];
         this._possibleDivisionsLen = this._possibleDivisions.length;
-        this._possibleDivisionsSub = { 
+        this._possibleDivisionsSub = {
             1: {
                 num: 2,
                 division:0.5
-            }, 
+            },
             0.5: {
                 num: 5,
                 division: 0.1
             },
             0.25: {
                 num: 5,
-                division: 0.05 
+                division: 0.05
             },
             0.2: {
                 num: 2,
                 division: 0.1
-            } 
+            }
         };
 
         this._scaleInner = this._buildScale();
         this._scale = this._addScale(this._scaleInner);
-        this._setStyle(this.options.fill, this.options.showSubunits);
+        this._setStyle(this.options);
 
         map.on(this.options.updateWhenIdle ? 'moveend' : 'move', this._update, this);
         map.whenReady(this._update, this);
@@ -54,7 +54,7 @@ L.Control.GraphicScale = L.Control.extend({
     },
 
     _addScale: function (scaleInner) {
-        
+
         var scale = L.DomUtil.create('div');
         scale.className = 'leaflet-control-graphicscale';
         scale.appendChild( scaleInner );
@@ -62,20 +62,20 @@ L.Control.GraphicScale = L.Control.extend({
         return scale;
     },
 
-    _setStyle: function (fill, showSubunits) {
+    _setStyle: function (options) {
         var classNames = ['leaflet-control-graphicscale-inner'];
-        if (fill && fill !== 'nofill') {
+        if (options.fill && options.fill !== 'nofill') {
             classNames.push('filled');
-            classNames.push('filled-'+fill);
+            classNames.push('filled-'+options.fill);
         }
 
-        if (showSubunits) {
+        if (options.showSubunits) {
             classNames.push('showsubunits');
         }
 
-        // if (options.doubleLine) {
-        //     classNames.push('double');
-        // }
+        if (options.doubleLine) {
+            classNames.push('double');
+        }
 
         this._scaleInner.className = classNames.join(' ');
     },
@@ -105,7 +105,7 @@ L.Control.GraphicScale = L.Control.extend({
             this._subunits.unshift(subunit);
 
         }
-        
+
         this._zeroLbl = L.DomUtil.create('div', 'label zeroLabel');
         this._zeroLbl.innerHTML = '0';
         this._units[0].appendChild(this._zeroLbl);
@@ -113,7 +113,7 @@ L.Control.GraphicScale = L.Control.extend({
         this._subunitsLbl = L.DomUtil.create('div', 'label subunitsLabel');
         this._subunitsLbl.innerHTML = '?';
         this._subunits[4].appendChild(this._subunitsLbl);
-        
+
         return root;
     },
 
@@ -154,7 +154,7 @@ L.Control.GraphicScale = L.Control.extend({
     },
 
     _updateScale: function(maxMeters, options) {
-        
+
         var scale = this._getBestScale(maxMeters, options.minUnitWidth, options.maxUnitsWidth);
 
         // this._render(scale.unit.unitPx, scale.numUnits, scale.unit.unitMeters);
@@ -178,11 +178,11 @@ L.Control.GraphicScale = L.Control.extend({
             return scaleB.score - scaleA.score;
         });
 
-        var scale = possibleScales[0]; 
+        var scale = possibleScales[0];
         scale.subunits = this._getSubunits(scale);
         console.log(scale);
 
-        return scale;   
+        return scale;
     },
 
     _getSubunits: function(scale) {
@@ -193,7 +193,7 @@ L.Control.GraphicScale = L.Control.extend({
         subunit.subunitMeters = subdivision.division * (scale.unit.unitMeters / scale.unit.unitDivision);
         subunit.subunitPx = subdivision.division * (scale.unit.unitPx / scale.unit.unitDivision);
 
-        var subunits = { 
+        var subunits = {
             subunit: subunit,
             numSubunits: subdivision.num,
             total: subdivision.num * subunit.subunitMeters
@@ -208,7 +208,7 @@ L.Control.GraphicScale = L.Control.extend({
         for (var i = 0; i < this._possibleUnitsNumLen; i++) {
             var numUnits = this._possibleUnitsNum[i];
             var numUnitsScore = (this._possibleUnitsNumLen-i)*0.5;
-            
+
             for (var j = 0; j < possibleUnits.length; j++) {
                 var unit = possibleUnits[j];
                 var totalWidthPx = unit.unitPx * numUnits;
@@ -220,7 +220,7 @@ L.Control.GraphicScale = L.Control.extend({
                     var score = unit.unitScore + numUnitsScore + totalWidthPxScore;
 
                     //penalty when unit / numUnits association looks weird
-                    if ( 
+                    if (
                         unit.unitDivision === 0.25 && numUnits === 3 ||
                         unit.unitDivision === 0.5 && numUnits === 3 ||
                         unit.unitDivision === 0.25 && numUnits === 5
@@ -259,8 +259,8 @@ L.Control.GraphicScale = L.Control.extend({
                 }
 
                 units.push({
-                    unitMeters: unitMeters, 
-                    unitPx: unitPx, 
+                    unitMeters: unitMeters,
+                    unitPx: unitPx,
                     unitDivision: this._possibleDivisions[j],
                     unitScore: this._possibleDivisionsLen-j });
 
@@ -271,7 +271,7 @@ L.Control.GraphicScale = L.Control.extend({
     _render: function(scale) {
         this._renderPart(scale.unit.unitPx, scale.unit.unitMeters, scale.numUnits, this._units, this._unitsLbls);
         this._renderPart(scale.subunits.subunit.subunitPx, scale.subunits.subunit.subunitMeters, scale.subunits.numSubunits, this._subunits);
-        
+
         var subunitsDisplayUnit = this._getDisplayUnit(scale.subunits.total);
         this._subunitsLbl.innerHTML = ''+ subunitsDisplayUnit.amount + subunitsDisplayUnit.unit;
     },
