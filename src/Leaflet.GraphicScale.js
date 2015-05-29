@@ -8,9 +8,9 @@ L.Control.GraphicScale = L.Control.extend({
         updateWhenIdle: false,
         minUnitWidth: 30,
         maxUnitsWidth: 240,
-        fill: 'hollow',
-        showSubunits: true,
-        doubleLine : true
+        fill: false,
+        showSubunits: false,
+        doubleLine : false
     },
 
     onAdd: function (map) {
