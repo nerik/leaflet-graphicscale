@@ -10,8 +10,9 @@
     }).addTo(map);
 
 	var graphicScale = L.control.graphicScale({
-		// doubleLine: true,
-		fill: 'hollow'
+		doubleLine: true,
+		fill: 'hollow',
+        showSubunits: true
 	}).addTo(map);
 
     var scaleText = L.DomUtil.create('div', 'scaleText' );
@@ -20,10 +21,10 @@
 
     var styleChoices = scaleText.querySelectorAll('.choice');
 
-    for (var i = 0; i < styleChoices.length; i++) { 
+    for (var i = 0; i < styleChoices.length; i++) {
         styleChoices[i].addEventListener('click', function(e) {
-            graphicScale._setStyle( e.currentTarget.innerHTML );
+            graphicScale._setStyle( { fill: e.currentTarget.innerHTML } );
         });
     }
-       
+
 })();
