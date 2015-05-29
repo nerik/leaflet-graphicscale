@@ -55,8 +55,15 @@
     border-left-width: 1px; }
   .leaflet-control-graphicscale-inner.double .subunits .division .line2 {
     border-width: 0 0 1px 1px; }
+  .leaflet-control-graphicscale-inner.double .label {
+    margin-bottom: 14px; }
   .leaflet-control-graphicscale-inner.filled .fill {
-    background-color: #000; }
+    background-color: #000;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0; }
   .leaflet-control-graphicscale-inner.filled-line .line .fill {
     height: 2px;
     top: 2px; }

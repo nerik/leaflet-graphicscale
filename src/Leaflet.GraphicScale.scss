@@ -101,12 +101,20 @@ $fillHollowPadding: 1px;
 			border-width: 0 0 $borderWidth $borderWidth;
 		}
 
+		.label {
+	    	margin-bottom: 14px;
+		}
 	}
 
 
 	&.filled {
 		.fill {
 			background-color: #000;
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
 		}
 
 	}
