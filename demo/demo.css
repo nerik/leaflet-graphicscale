@@ -3,7 +3,7 @@ body {
     padding: 0;
 }
 
-#map { 
+#map {
     position: absolute;
     top: 0;
     left: 0;
@@ -22,11 +22,12 @@ body {
 .leaflet-control-graphicscale .label {
     font-family: 'Italianno', cursive;
     font-size: 24px;
+    margin-bottom: 2px;
 }
 
 .leaflet-control-graphicscale .labelSub {
     font-size: 21px;
-    margin-bottom: 2px;
+    margin-bottom: 4px;
 }
 
 .leaflet-control-graphicscale .line {
