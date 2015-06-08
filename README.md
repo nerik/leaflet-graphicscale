@@ -1,7 +1,7 @@
 # leaflet-graphicscale
-A graphic scale for Leaflet.js that looks sharp.
+A animated graphic scale for Leaflet.js that looks sharp.
 
-![](http://nerik.github.io/leaflet-graphicscale/readme/demo.png)
+[![Image](http://nerik.github.io/leaflet-graphicscale/readme/demo.png)][1]
 
 Demo : http://nerik.github.io/leaflet-graphicscale/demo/
 
@@ -68,4 +68,4 @@ See http://leafletjs.com/reference.html#control
 
 See http://leafletjs.com/reference.html#control-scale
 
-
+[1]: http://nerik.github.io/leaflet-graphicscale/demo/
