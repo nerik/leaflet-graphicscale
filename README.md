@@ -13,7 +13,7 @@ This plugin provides a more interesting alternative with more customizability.
 
 ## Contributing
 Yes, please. I haven't had the time to make proper tests but they would be much needed.
-Also I've heard that there are some parts on the globe where they don't use the metric system, so if you'd like to add yours be my guest (furlongs, wiffles, smoots, miles... http://en.wikipedia.org/wiki/List_of_humorous_units_of_measurement)
+Also I've heard that there are some parts on the globe where they don't use the metric system, so if you'd like to add your measurement system be my guest (furlongs, wiffles, smoots, miles... http://en.wikipedia.org/wiki/List_of_humorous_units_of_measurement)
 
 ## Usage
 ```
