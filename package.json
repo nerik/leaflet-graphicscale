@@ -1,12 +1,12 @@
 {
   "name": "leaflet-graphicscale",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "A graphic scale for Leaflet.js that looks sharp",
-  "main": "index.js",
+  "main": "./src/Leaflet.GraphicScale.js",
   "scripts": {
     "test": "mocha",
     "build:js": "uglifyjs src/Leaflet.GraphicScale.js > dist/Leaflet.GraphicScale.js",
-    "build:css": "sass src/Leaflet.GraphicScale.scss > dist/Leaflet.GraphicScale.css",
+    "build:css": "sass --style compressed src/Leaflet.GraphicScale.scss > dist/Leaflet.GraphicScale.css",
     "build": "npm run build:css && npm run build:js",
     "dev:livereload": "live-reload --port 9991 ./demo ./dist",
     "dev:watch": "onchange 'src/**/*.*' -- npm run build",
