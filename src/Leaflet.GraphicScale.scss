@@ -1,4 +1,4 @@
-@mixin transition($transition-property, $transition-time, $method) {
+@mixin leaflet-graphicscale-transition($transition-property, $transition-time, $method) {
     -webkit-transition: $transition-property $transition-time $method;
     -moz-transition: $transition-property $transition-time $method;
     -ms-transition: $transition-property $transition-time $method;
@@ -31,7 +31,7 @@ $fillHollowPadding: 1px;
 		position: absolute;
 	  	bottom: 0;
 	  	opacity: 1;
-	  	@include transition(opacity, .4s, linear);
+	  	@include leaflet-graphicscale-transition(opacity, .4s, linear);
 	}
 
 	.divisionLabel {
@@ -48,7 +48,7 @@ $fillHollowPadding: 1px;
 		display: inline-block;
 		position: relative;
 		width: 40px;
-		@include transition(width, 0.4s, ease-in-out);
+		@include leaflet-graphicscale-transition(width, 0.4s, ease-in-out);
 
 		.line, .line2 {
 			border-style: solid;
@@ -121,17 +121,17 @@ $fillHollowPadding: 1px;
 
 	&.filled-line {
 
-		@mixin fill-line {
+		@mixin leaflet-graphicscale-fill-line {
 			height: 2px;
 			top: $lineHeight/2 - $fillLineHeight/2;
 		}
 
 		.line .fill {
-			@include fill-line;
+			@include leaflet-graphicscale-fill-line;
 		}
 
 		&.double .fill {
-			@include fill-line;
+			@include leaflet-graphicscale-fill-line;
 		}
 	}
 
