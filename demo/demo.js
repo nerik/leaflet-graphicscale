@@ -1,8 +1,9 @@
 (function() {
 	'use strict';
 
-	var map = L.map('map').setView([16.252583, -61.539917], 10);
-
+	var map = L.map('map', {
+        maxZoom: 30
+    }).setView([16.252583, -61.539917], 10);
 
     L.tileLayer('https://{s}.tiles.mapbox.com/v3/{key}/{z}/{x}/{y}.png', {
         key: 'nerik.m4nlm06k',

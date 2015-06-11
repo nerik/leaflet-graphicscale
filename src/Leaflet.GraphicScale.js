@@ -16,10 +16,14 @@ L.Control.GraphicScale = L.Control.extend({
     onAdd: function (map) {
         this._map = map;
 
+        //number of units on the scale, by order of preference
         this._possibleUnitsNum = [3, 5, 2, 4];
         this._possibleUnitsNumLen = this._possibleUnitsNum.length;
+
+        //how to divide a full unit, by order of preference
         this._possibleDivisions = [1, 0.5, 0.25, 0.2];
         this._possibleDivisionsLen = this._possibleDivisions.length;
+        
         this._possibleDivisionsSub = {
             1: {
                 num: 2,
@@ -180,7 +184,6 @@ L.Control.GraphicScale = L.Control.extend({
 
         var scale = possibleScales[0];
         scale.subunits = this._getSubunits(scale);
-        console.log(scale);
 
         return scale;
     },
@@ -205,6 +208,9 @@ L.Control.GraphicScale = L.Control.extend({
 
     _getPossibleScales: function(possibleUnits, maxUnitsWidthPx) {
         var scales = [];
+        var minTotalWidthPx = Number.POSITIVE_INFINITY;
+        var fallbackScale;
+
         for (var i = 0; i < this._possibleUnitsNumLen; i++) {
             var numUnits = this._possibleUnitsNum[i];
             var numUnitsScore = (this._possibleUnitsNumLen-i)*0.5;
@@ -212,35 +218,54 @@ L.Control.GraphicScale = L.Control.extend({
             for (var j = 0; j < possibleUnits.length; j++) {
                 var unit = possibleUnits[j];
                 var totalWidthPx = unit.unitPx * numUnits;
+
+                var scale = {
+                    unit: unit,
+                    totalWidthPx: totalWidthPx,
+                    numUnits: numUnits,
+                    score: 0
+                };
+
+                //TODO: move score calculation  to a testable method
+                var totalWidthPxScore = 1-(maxUnitsWidthPx - totalWidthPx) / maxUnitsWidthPx;
+                totalWidthPxScore *= 3;
+
+                var score = unit.unitScore + numUnitsScore + totalWidthPxScore;
+
+                //penalty when unit / numUnits association looks weird
+                if (
+                    unit.unitDivision === 0.25 && numUnits === 3 ||
+                    unit.unitDivision === 0.5 && numUnits === 3 ||
+                    unit.unitDivision === 0.25 && numUnits === 5
+                    ) {
+                    score -= 2;
+                }
+
+                scale.score = score;
+
+
+
                 if (totalWidthPx < maxUnitsWidthPx) {
+                    scales.push(scale);
+                }
 
-                    var totalWidthPxScore = 1-(maxUnitsWidthPx - totalWidthPx) / maxUnitsWidthPx;
-                    totalWidthPxScore *= 3;
-
-                    var score = unit.unitScore + numUnitsScore + totalWidthPxScore;
-
-                    //penalty when unit / numUnits association looks weird
-                    if (
-                        unit.unitDivision === 0.25 && numUnits === 3 ||
-                        unit.unitDivision === 0.5 && numUnits === 3 ||
-                        unit.unitDivision === 0.25 && numUnits === 5
-                        ) {
-                        score -= 2;
-                    }
-
-                    scales.push({
-                        unit: unit,
-                        totalWidthPx: totalWidthPx,
-                        numUnits: numUnits,
-                        score: score
-                    });
+                //keep a fallback scale in case totalWidthPx < maxUnitsWidthPx condition is never met
+                //(happens at very high zoom levels because we dont handle submeter units yet)
+                if (totalWidthPx<minTotalWidthPx) {
+                    minTotalWidthPx = totalWidthPx;
+                    fallbackScale = scale;
                 }
             }
         }
 
+        if (!scales.length) scales.push(fallbackScale);
+
         return scales;
     },
 
+    /**
+    Returns a list of possible units whose widthPx would be < minUnitWidthPx
+    **/
     _getPossibleUnits: function(maxMeters, minUnitWidthPx, mapWidthPx) {
         var exp = (Math.floor(maxMeters) + '').length;
 
@@ -266,6 +291,8 @@ L.Control.GraphicScale = L.Control.extend({
 
             }
         }
+
+        return units;
     },
 
     _render: function(scale) {
@@ -318,7 +345,7 @@ L.Control.GraphicScale = L.Control.extend({
         return {
             unit: displayUnit,
             amount: (displayUnit === 'km') ? meters / 1000 : meters
-        }
+        };
     }
 
 });
