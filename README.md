@@ -10,15 +10,63 @@ Because scale is an important component of a map, and it is often overlooked. Le
 
 This plugin provides a more interesting alternative with more customizability.
 
-
 ## Contributing
+
 Yes, please. I haven't had the time to make proper tests but they would be much needed.
 Also I've heard that there are some parts on the globe where they don't use the metric system, so if you'd like to add your measurement system be my guest (furlongs, wiffles, smoots, miles... http://en.wikipedia.org/wiki/List_of_humorous_units_of_measurement)
 
-## Usage
+To run the demo locally (you'll need ```sass```): 
 ```
-var graphicScale = L.control.graphicScale([options]).addTo(map);
+npm run dev
 ```
+
+
+## Getting started
+
+### Using minified files 
+
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="leaflet.css" />
+    <link rel="stylesheet" href="Leaflet.GraphicScale.min.css" />
+</head>
+<body>
+    <div id="map"></div>
+    <script src="vendor/leaflet.js"></script>
+    <script src="../dist/Leaflet.GraphicScale.min.js"></script>
+    <script>
+        var map = L.map('map');
+        L.tileLayer('...').addTo(map);
+        var graphicScale = L.control.graphicScale([options]).addTo(map);
+    </script>
+</body>
+</html>
+```
+
+See below for ```[options]```
+
+### Compile from source (using browserify and sass)
+
+```
+npm install -S leaflet-graphicscale
+```
+
+SASS : 
+```
+@import './node_modules/leaflet-graphicscale/src/Leaflet.GraphicScale.scss';
+```
+
+JS :
+```
+require('leaflet-graphicscale');
+var graphicScale = L.control.graphicScale().addTo(map);
+```
+
+
+
 
 ## Options
 
@@ -72,5 +120,9 @@ See http://leafletjs.com/reference.html#control
 ### updateWhenIdle:
 
 See http://leafletjs.com/reference.html#control-scale
+
+
+
+
 
 [1]: http://nerik.github.io/leaflet-graphicscale/demo/
