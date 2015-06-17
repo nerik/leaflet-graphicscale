@@ -6,7 +6,8 @@ L.Control.GraphicScale = L.Control.extend({
         maxUnitsWidth: 240,
         fill: false,
         showSubunits: false,
-        doubleLine : false
+        doubleLine: false,
+        labelPlacement: 'auto' 
     },
 
     onAdd: function (map) {
@@ -76,6 +77,8 @@ L.Control.GraphicScale = L.Control.extend({
         if (options.doubleLine) {
             classNames.push('double');
         }
+
+        classNames.push('labelPlacement-'+options.labelPlacement);
 
         this._scaleInner.className = classNames.join(' ');
     },

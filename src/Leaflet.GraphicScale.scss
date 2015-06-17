@@ -14,7 +14,7 @@ $fillHollowPadding: 1px;
 
 .leaflet-control-graphicscale-inner {
 
-	margin: 10px 16px;
+	margin: 6px 16px;
 
 	.units {
 		display: inline-block;
@@ -29,9 +29,20 @@ $fillHollowPadding: 1px;
 	  	text-align: center;
     	margin-bottom: 10px;
 		position: absolute;
-	  	bottom: 0;
 	  	opacity: 1;
 	  	@include leaflet-graphicscale-transition(opacity, .4s, linear);
+	}
+
+	//labels are on top
+	.leaflet-bottom &.labelPlacement-auto, &.labelPlacement-top {
+		margin-top: 20px;
+		.label {
+			bottom: 0;
+		}
+	}
+
+	.leaflet-top &.labelPlacement-auto, &.labelPlacement-bottom {
+		margin-bottom: 20px;
 	}
 
 	.divisionLabel {
@@ -109,7 +120,7 @@ $fillHollowPadding: 1px;
 
 	&.filled {
 		.fill {
-			background-color: #000;
+			background-color: $color;
 			position: absolute;
 			top: 0;
 			left: 0;
@@ -158,5 +169,6 @@ $fillHollowPadding: 1px;
 			opacity: 0;
 		}
 	}
-
 }
+
+

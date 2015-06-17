@@ -113,6 +113,10 @@ Default: 30. The minimum width of a scale unit.
 
 Default: 240. The maximum width of the scale without subunits.
 
+### labelPlacement: ```'auto'|'top'|'bottom'``` 
+
+Default: auto. Display the distance label on top/on the bottom of the scale bar. If set to auto, labels will be placed on top when the scale control is on the bottom of the map, and on the bottom when the scale control is on the top of the map (```position``` parameter)
+
 ### position:
 
 See http://leafletjs.com/reference.html#control
