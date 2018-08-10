@@ -6,7 +6,10 @@ L.Control.GraphicScale = L.Control.extend({
         maxUnitsWidth: 240,
         fill: false,
         showSubunits: false,
-        doubleLine : false
+        doubleLine: false,
+        labelPlacement: 'auto',
+        format: "meters", //options: "feet", "meters" //HOTFIX 20180810: Options for controlling the graphics scale format.
+        update: null //HOTFIX 20180810: Update function for manually updating the scale. When initially creating the graphicscale, be sure to assign it to an object. At the end of this overridden function use [thatobject]._update();
     },
 
     onAdd: function (map) {
@@ -77,6 +80,8 @@ L.Control.GraphicScale = L.Control.extend({
             classNames.push('double');
         }
 
+        classNames.push('labelPlacement-'+options.labelPlacement);
+
         this._scaleInner.className = classNames.join(' ');
     },
 
@@ -138,19 +143,23 @@ L.Control.GraphicScale = L.Control.extend({
     },
 
     _update: function () {
-        var bounds = this._map.getBounds(),
-            centerLat = bounds.getCenter().lat,
-            //length of an half world arc at current lat
-            halfWorldMeters = 6378137 * Math.PI * Math.cos(centerLat * Math.PI / 180),
-            //length of this arc from map left to map right
-            dist = halfWorldMeters * (bounds.getNorthEast().lng - bounds.getSouthWest().lng) / 180,
-            size = this._map.getSize();
+        var bounds = this._map.getBounds();
+        var centerLat = bounds.getCenter().lat;
+        //length of an half world arc at current lat
+        var halfWorldMeters = 6378137 * Math.PI * Math.cos(centerLat * Math.PI / 180);
+
+        //HOTFIX 20180810: Added to handle the variety of options to convert objects into.
+        if (this.options.format === "feet")
+            //meters to feet conversion.
+            halfWorldMeters = halfWorldMeters * 3.2808399;
+
+        //length of this arc from map left to map right
+        var dist = halfWorldMeters * (bounds.getNorthEast().lng - bounds.getSouthWest().lng) / 180;
+        var size = this._map.getSize();
 
         if (size.x > 0) {
             this._updateScale(dist, this.options);
         }
-
-
     },
 
     _updateScale: function(maxMeters, options) {
@@ -320,9 +329,15 @@ L.Control.GraphicScale = L.Control.extend({
             var lblClassNames = ['label', 'divisionLabel'];
 
             if (i < num) {
-                var lblText = ( (i+1)*displayUnit.amount );
+                var lblText;
 
-                if (i === num-1) {
+                lblText = ((i + 1) * displayUnit.amount);
+
+                //If it's a fractional number, round to the nearest tenth for display purposes.
+                if (lblText % 1 !== 0)
+                    lblText = lblText.toFixed(1);
+
+                if (i === num - 1) {
                     lblText += displayUnit.unit;
                     lblClassNames.push('labelLast');
                 } else {
@@ -336,14 +351,41 @@ L.Control.GraphicScale = L.Control.extend({
         }
     },
 
-    _getDisplayUnit: function(meters) {
-        var displayUnit = (meters<1000) ? 'm' : 'km';
+    _getDisplayUnit: function (meters) {
+        var displayUnit, amount;
+
+        if (this.options.format === "meters") {
+            if (meters < 1000) {
+                displayUnit = "m";
+                amount = meters;
+            }
+            else {
+                displayUnit = "km";
+                amount = meters / 1000;
+            }
+        }
+        else if (this.options.format === "feet") {
+            //HOTFIX 20180810: feet conversion.
+            if (meters <= 1000) {
+                displayUnit = "ft";
+                //though labeled meters, it was converted to feet earlier
+                amount = meters;
+            }
+            else {
+                displayUnit = "mi";
+                //Feet (though labeled meters, it was converted to feet earlier) to miles conversion.
+                amount = meters / 5280;
+                //If it's a fractional number, round to the nearest tenth for display purposes.
+                if (amount % 1 !== 0)
+                    amount = amount.toFixed(1);
+            }
+        }
+        //Handle other options here by looking for this.options.format.
         return {
             unit: displayUnit,
-            amount: (displayUnit === 'km') ? meters / 1000 : meters
+            amount: amount
         };
     }
-
 });
 
 L.Map.mergeOptions({
