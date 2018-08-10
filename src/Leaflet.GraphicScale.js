@@ -351,30 +351,30 @@ L.Control.GraphicScale = L.Control.extend({
         }
     },
 
-    _getDisplayUnit: function (meters) {
+    _getDisplayUnit: function (units) {
         var displayUnit, amount;
 
         if (this.options.format === "meters") {
-            if (meters < 1000) {
+            if (units < 1000) {
                 displayUnit = "m";
-                amount = meters;
+                amount = units;
             }
             else {
                 displayUnit = "km";
-                amount = meters / 1000;
+                amount = units / 1000;
             }
         }
         else if (this.options.format === "feet") {
             //HOTFIX 20180810: feet conversion.
-            if (meters <= 1000) {
+            if (units <= 1000) {
                 displayUnit = "ft";
-                //though labeled meters, it was converted to feet earlier
-                amount = meters;
+                //it was converted to feet earlier
+                amount = units;
             }
             else {
                 displayUnit = "mi";
                 //Feet (though labeled meters, it was converted to feet earlier) to miles conversion.
-                amount = meters / 5280;
+                amount = units / 5280;
                 //If it's a fractional number, round to the nearest tenth for display purposes.
                 if (amount % 1 !== 0)
                     amount = amount.toFixed(1);
