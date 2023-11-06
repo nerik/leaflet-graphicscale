@@ -1,6 +1,6 @@
 {
   "name": "leaflet-graphicscale",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A graphic scale for Leaflet.js that looks sharp",
   "main": "./src/Leaflet.GraphicScale.js",
   "scripts": {
@@ -25,7 +25,7 @@
     "km"
   ],
   "author": "Erik Escoffier <erik.escoffier@gmail.com> (https://github.com/nerik/)",
-  "license": "ISC",
+  "license": "unlicense",
   "bugs": {
     "url": "https://github.com/nerik/leaflet-graphicscale/issues"
   },

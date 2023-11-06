@@ -1,3 +1,9 @@
+# DEPRECATED 
+
+![No Maintenance Intended](https://img.shields.io/maintenance/no/2016.svg)
+
+--- 
+
 # leaflet-graphicscale
 A animated graphic scale for Leaflet.js that looks sharp.
 
