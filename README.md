@@ -2,6 +2,8 @@
 
 ![No Maintenance Intended](https://img.shields.io/maintenance/no/2016.svg)
 
+Active fork here (as of Feb 6 2024): https://github.com/kalisio/leaflet-graphicscale
+
 --- 
 
 # leaflet-graphicscale
